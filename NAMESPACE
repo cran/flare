@@ -1,0 +1,35 @@
+useDynLib("flare")
+import("MASS","igraph","Matrix","lattice")
+export("flare.tiger", 
+       "flare.tiger.generator",
+       "flare.tiger.clime.cdadm",
+       "flare.tiger.clime.ladm",
+       "flare.tiger.clime.hadm",
+       "flare.tiger.aclime.cdadm",
+       "flare.tiger.slasso.cdadm",
+       "flare.tiger.roc",
+       "flare.tiger.select",
+       "flare.slim",
+       "flare.slim.lad",
+       "flare.slim.sqrt",
+       "flare.slim.dantzig",
+       "flare.slim.lq",
+       "flare.plot",
+       "print.slim",
+       "print.tiger",
+       "print.select",
+       "print.sim",
+       "plot.slim",
+       "plot.tiger",
+       "plot.roc",
+       "plot.select",
+       "plot.sim")
+S3method("print", "tiger")
+S3method("print", "slim")
+S3method("print", "roc")
+S3method("print", "select")
+S3method("print", "sim")
+S3method("plot", "tiger")
+S3method("plot", "roc")
+S3method("plot", "select")
+S3method("plot", "sim")
