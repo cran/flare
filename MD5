@@ -1,4 +1,4 @@
-c676070a6ebfb102724c070d209fd80b *DESCRIPTION
+c1f657cc6cceb4613440566baec879c0 *DESCRIPTION
 99862dddad7e30962f86a425c046f335 *NAMESPACE
 e26545f7bf97c3f35432cc4e32bd6e5b *R/flare.plot.R
 d890f5925b658a19690fee3112f0ce82 *R/flare.slim.R
@@ -20,10 +20,10 @@ b6de65d226adf3ecc1b5146b3c57de5c *R/flare.tiger.cv.R
 c576332fdc932a03588c412855fbeea5 *data/eyedata.rda
 cd89fdee0965468895055cd5b4366d91 *inst/doc/flare.pdf
 be3aff9967dedaaf731746577e960a21 *inst/doc/vignette.Rnw
-e940e6603eaa2fe39f0c56eb5f1248a0 *inst/doc/vignette.pdf
+a60b7ea3720d62d3de51dd849a5da9ef *inst/doc/vignette.pdf
 44fe216985abb04674f15486674428bb *man/eyedata.Rd
 66ff2e4620a5c56971e3ce70a327700d *man/flare-internal.Rd
-d7921e5cca9776022d827480a207bc5b *man/flare-package.Rd
+af471fd60eeceadffac29e2b8818e167 *man/flare-package.Rd
 11c171afce44062a85b903feccefa1da *man/flare.plot.Rd
 11ec789a67a4a00b520c4f595582674d *man/flare.slim.Rd
 a65cdbdcd438619d63224ebfc3ad8968 *man/flare.tiger.Rd
@@ -47,7 +47,6 @@ a9bc1fe7866247ae8fcd0657b88b6edf *src/slim_dantzig.c
 640219e4a7515237c6f9162cc94606c6 *src/slim_lq.c
 42d0ded89bf4cf5ba41c232ad16f3862 *src/slim_sqrt.c
 46bb4f5a56aa7ff50e3750bc46fa38bd *src/slimh.h
-034201c789917182a4cb438db71a9d49 *src/svd1.c
 72c41cabd25872bc678d8cfbce344e2f *src/tiger_aclime_cdadm.c
 5dc2c6761f78e163f2c3578afd66c1c2 *src/tiger_clime_cdadm.c
 e0ad899e9b25e7a5e850a8f15a07b880 *src/tiger_clime_hadm.c

@@ -12,8 +12,8 @@ The package "flare" provides the implementation of a family of new regression me
 \tabular{ll}{
 Package: \tab flare\cr
 Type: \tab Package\cr
-Version: \tab 0.9.6\cr
-Date: \tab 2012-11-25\cr
+Version: \tab 0.9.7\cr
+Date: \tab 2012-11-28\cr
 License: \tab GPL-2\cr
 }
 }

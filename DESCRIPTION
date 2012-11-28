@@ -1,11 +1,11 @@
 Package: flare
 Type: Package
 Title: Family of Lasso Regression
-Version: 0.9.6
-Date: 2012-11-25
+Version: 0.9.7
+Date: 2012-11-28
 Author: Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu
 Maintainer: Xingguo Li <xingguo.leo@gmail.com>
-Depends: R (>= 2.14), lattice, igraph, MASS, Matrix
+Depends: R (>= 2.15.0), lattice, igraph, MASS, Matrix
 Description: The package "flare" provides the implementation of a
         family of Lasso variants including Dantzig Selector, LAD Lasso,
         SQRT Lasso, Lq Lasso for estimating high dimensional sparse
@@ -21,5 +21,5 @@ Description: The package "flare" provides the implementation of a
         adaptive penalty.
 License: GPL-2
 Repository: CRAN
-Packaged: 2012-11-27 04:52:50 UTC; leo
-Date/Publication: 2012-11-27 17:50:59
+Packaged: 2012-11-30 18:38:19 UTC; admin-118
+Date/Publication: 2012-11-30 18:38:51
