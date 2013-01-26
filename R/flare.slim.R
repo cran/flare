@@ -15,8 +15,10 @@ flare.slim <- function(X,
                        rho = NULL,
                        method="lq",
                        q = 2,
-                       prec = 1e-3,
-                       max.ite = 1e3,
+                       prec = 1e-4,
+                       max.ite = 1e4,
+                       mu = 0.01,
+                       intercept = TRUE,
                        verbose = TRUE)
 {
   if(method!="dantzig" && method!="lq"){
@@ -28,17 +30,17 @@ flare.slim <- function(X,
       cat("q must be in [1, 2] when method = \"lq\".\n")
       return(NULL)
     }
-  }
+  } else q=0
   if(verbose) {
     cat("Sparse Linear Regression with L1 Regularization.\n")
   }
   n = nrow(X)
   d = ncol(X)
   maxdf = max(n,d)
-#   if(intercept){
-#     X = cbind(rep(1, n), X)
-#     d = d+1
-#   }
+  #   if(intercept){
+  #     X = cbind(rep(1, n), X)
+  #     d = d+1
+  #   }
   xm=matrix(rep(.colMeans(X,n,d),n),nrow=n,ncol=d,byrow=T)
   x1=X-xm
   sdx=sqrt(diag(t(x1)%*%x1)/(n-1))
@@ -49,6 +51,11 @@ flare.slim <- function(X,
   sdy=sqrt(sum(y1^2)/(n-1))
   yy=y1/sdy
   corr=cor(xx,yy)
+  
+  if(intercept){
+    xx = cbind(rep(1, n), xx)
+    d = d+1
+  }
   
   if(!is.null(lambda)) nlambda = length(lambda)
   if(is.null(lambda)){
@@ -62,8 +69,9 @@ flare.slim <- function(X,
     }
     if(method=="dantzig")
       lambda.max = max(corr)
-    else 
-      lambda.max = pi*sqrt(log(d)/n) #min(max(S-diag(diag(S))),-min(S-diag(diag(S))))
+    else
+      lambda.max = sqrt(log(d)/n)
+      
     lambda.min = lambda.min.ratio*lambda.max
     lambda = exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
     rm(lambda.max,lambda.min,lambda.min.ratio)
@@ -73,31 +81,71 @@ flare.slim <- function(X,
     rho = sqrt(d)
   begt=Sys.time()
   if(method=="dantzig") # dantzig
-    out = flare.slim.dantzig(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec)
+    out = flare.slim.dantzig(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec,verbose)
+#     out = flare.slim.dantzig(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec,verbose)
+  
   if(method=="lq" && q>=1) {#  && q<1e5 && q!=2 && q!="lasso"
     if(is.null(q)) q=2;
-    if(q==1) # lad lasso
-      out = flare.slim.lad(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec)
-    if(q==2) # sqrt lasso
-      out = flare.slim.sqrt(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec)
+    if(q==1) { # lad lasso
+      lambda = lambda*n
+      out = flare.slim.lad.mfista(Y, xx, lambda, nlambda, n, d, maxdf, mu, max.ite, prec,intercept,verbose)
+    }
+    if(q==2) { # sqrt lasso
+      lambda = lambda*sqrt(n)
+      out = flare.slim.sqrt.mfista(Y, xx, lambda, nlambda, n, d, maxdf, mu, max.ite, prec,intercept,verbose)
+    }
     if(q>1 && q<2)
-      out = flare.slim.lq(yy, xx, q, lambda, nlambda, n, d, maxdf, rho, max.ite, prec)
+      out = flare.slim.lq(yy, xx, q, lambda, nlambda, n, d, maxdf, rho, max.ite, prec,intercept,verbose)
   }
   runt=Sys.time()-begt
   
   sparsity=rep(0,nlambda)
   for(i in 1:nlambda)
     sparsity[i] = sum(out$beta[[i]]!=0)/d
-    
+  
   est = list()    
-  beta1=matrix(0,nrow=d,ncol=nlambda)
-  intercept=matrix(0,nrow=1,ncol=nlambda)
-  for(k in 1:nlambda){
-    intercept[k]=ym-xm[1,]%*%Cxinv%*%out$beta[[k]]*sdy
-    beta1[,k]=Cxinv%*%out$beta[[k]]*sdy
+  intcpt=matrix(0,nrow=1,ncol=nlambda)
+  
+  if(!intercept){
+    beta1=matrix(0,nrow=d,ncol=nlambda)
+    if(q==1 || q==2){
+      for(k in 1:nlambda){
+        tmp.beta = out$beta[[k]]
+        intcpt[k]=-xm[1,]%*%Cxinv%*%tmp.beta
+        beta1[,k]=Cxinv%*%tmp.beta
+      }
+    }
+#     else{
+#       for(k in 1:nlambda){
+#         beta1[,k]=out$beta[[k]]
+#       }
+#     }
+    else{
+      for(k in 1:nlambda){
+        intcpt[k]=ym-xm[1,]%*%Cxinv%*%out$beta[[k]]*sdy
+        beta1[,k]=Cxinv%*%out$beta[[k]]*sdy
+      }
+    }
+  } else {
+    beta1=matrix(0,nrow=d-1,ncol=nlambda)
+    if(q==1 || q==2){
+      for(k in 1:nlambda){
+        tmp.beta = out$beta[[k]][2:d]
+        intcpt[k]=out$beta[[k]][1]-xm[1,]%*%Cxinv%*%tmp.beta
+        beta1[,k]=Cxinv%*%tmp.beta
+      }
+    }
+    else{
+      for(k in 1:nlambda){
+        tmp.beta = out$beta[[k]][2:d]
+        intcpt[k]=ym-xm[1,]%*%Cxinv%*%tmp.beta*sdy+out$beta[[k]][1]*sdy
+        beta1[,k]=Cxinv%*%tmp.beta*sdy
+      }
+    }
   }
+  
   est$beta = beta1
-  est$intercept = intercept
+  est$intercept = intcpt
   est$Y = Y
   est$X = X
   est$lambda = lambda
@@ -108,6 +156,10 @@ flare.slim <- function(X,
   est$ite =out$ite
   est$verbose = verbose
   est$runtime = runt
+  if(method=="lq"){
+    est$obj = out$obj
+    est$runt = out$runt
+  }
   class(est) = "slim"
   return(est)
 }

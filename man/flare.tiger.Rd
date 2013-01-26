@@ -6,15 +6,14 @@ Tuning Insensitive Graph Estimation and Regression
 }
 
 \description{
-The function "tiger" estimates sparse precision matrix in high dimensions. We adopt two estimation procedures based on column by column regression scheme: (1) Tuning-Insensitive Graph Estimation and Regression (tiger); (2) The Constrained L1 Minimization for Sparse Precision Matrix Estimation using either L1 penalty (clime) or adaptive penalty (aclime). The optimization algorithm for all three methods are implemented based on the alternating direction method of multipliers (ADMM) combined with the linearization and efficient coordinate descent algorithm. The computation is memory-optimized using the sparse matrix output.
+The function "tiger" estimates sparse precision matrix in high dimensions. We adopt two estimation procedures based on column by column regression scheme: (1) Tuning-Insensitive Graph Estimation and Regression (tiger); (2) The Constrained L1 Minimization for Sparse Precision Matrix Estimation using either L1 penalty (clime) or adaptive penalty (aclime). For TIGER, we adopt the monotone fast iterative soft-thresholding algorithm (MFISTA). For CLIME and ACLIME, we adopt the alternating direction method of multipliers (ADMM) combined with the linearization and efficient coordinate descent algorithm. The computation is memory-optimized using the sparse matrix output.
 }
 
 \usage{
 flare.tiger(data, lambda = NULL, nlambda = NULL, lambda.min.ratio = NULL, 
-      rho = NULL, method = "slasso", alg = NULL, sym = "or", 
-      shrink=NULL, prec = 1e-3, max.ite = NULL, wmat = NULL, 
-      standardize = FALSE, correlation = FALSE, perturb = TRUE, 
-      verbose = TRUE)
+      rho = NULL, method = "slasso", sym = "or", shrink=NULL,
+      prec = 1e-4, mu = 0.01, max.ite = 1e4, wmat = NULL, standardize = FALSE,
+      correlation = FALSE, perturb = TRUE, verbose = TRUE)
 }
 
 \arguments{
@@ -24,13 +23,13 @@ flare.tiger(data, lambda = NULL, nlambda = NULL, lambda.min.ratio = NULL,
   \item{lambda.min.ratio}{The smallest value for \code{lambda}, as a fraction of the uppperbound (\code{MAX}) of the regularization parameter. The program can automatically generate \code{lambda} as a sequence of length = \code{nlambda} starting from \code{MAX} to \code{lambda.min.ratio*MAX} in log scale. The default value is \code{0.25} for TIGER and \code{0.5} for CLIME.}
   \item{rho}{Penalty parameter used in the optimization algorithm for \code{clime}. The default value is \eqn{\sqrt{d}}.}
   \item{method}{TIGER is applied if \code{method = "slasso"}, CLIME is applied if \code{method="clime"}, and adaptive CLIME is applied if \code{method = "aclime"}. Default value is \code{"slasso"}.}
-  \item{alg}{Optimization algorithms to solve subproblems if and only if \code{method = "clime"}. The coordinate descent is applied if \code{"alg = cdadm"}, and the linearization is applied if \code{"alg = ladm"}. The combination of coordinate descent and linearization is applied if \code{"alg = hybrid"}. Default value is \code{"hybrid"} for \code{method = "clime"}.}
   \item{sym}{Symmetrization of output graphs. If \code{sym = "and"}, the edge between node \code{i} and node \code{j} is selected ONLY when both node \code{i} and node \code{j} are selected as neighbors for each other. If \code{sym = "or"}, the edge is selected when either node \code{i} or node \code{j} is selected as the neighbor for each other. The default value is \code{"or"}.}
   \item{shrink}{Shrinkage of regularization parameter based on precision of estimation. The default value is 1.5 if \code{method = "clime"} and the default value is 0 if \code{method="slasso"} or \code{method = "aclime"}.}
-  \item{prec}{Stopping criterion. The default value is 1e-3.}
-  \item{max.ite}{The iteration limit. The default value is 1e3 if \code{method = "clime"} and \code{alg = "ladm"}, and is 1e2 if \code{method = "clime"} and \code{alg = "cdadm"}, or \code{method = "slasso"}.}
-  \item{wmat}{Weight matrix for adaptive CLIME. It is only used when \code{method = "aclime"}.}
-  \item{standardize}{Variables are standardized to have mean zero and unit standard deviation if \code{standardize = TRUE}. The default value is \code{FALSE}.}
+  \item{prec}{Stopping criterion. The default value is 1e-4.}
+  \item{mu}{The smoothing parameter. The default value is 0.01.}
+  \item{max.ite}{The iteration limit. The default value is 1e4.}
+  \item{wmat}{Weight matrix for adaptive CLIME. Only applicable when \code{method = "aclime"}.}
+  \item{standardize}{All varaibles are standardized to have mean zero and standard deviation one if \code{standardize = TRUE}. The default value is \code{FALSE}.}
   \item{correlation}{Correlation matrix is used as the input of \code{Sigma} for \code{method = "clime"} if \code{correlation = TRUE}. The default value is \code{FALSE}.}
   \item{perturb}{The diagonal of \code{Sigma} is added by a positive value to guarantee that \code{Sigma} is positive definite if \code{perturb = TRUE}. User can specify a numeric value for \code{perturbe}. The default value is TRUE.}
   \item{verbose}{Tracing information printing is disabled if \code{verbose = FALSE}. The default value is \code{TRUE}.}
@@ -50,7 +49,7 @@ where \eqn{\circ} denotes the Hadamard product, and \eqn{A_{d \times d} \leq B_{
 
 TIGER solves the following minimization problem\cr
 \deqn{
-    \min ||X-XB||_{2,1} + \lambda ||B||_1 \quad \textrm{s.t. } B_{jj} = 0,
+    \min \frac{1}{n}||X-XB||_{2,1} + \lambda ||B||_1 \quad \textrm{s.t. } B_{jj} = 0,
   }\cr
 where \eqn{||\cdot||_{1}} and \eqn{||\cdot||_{2,1}} are element-wise 1-norm and \eqn{L_{2,1}}-norm respectively.
 }
@@ -104,7 +103,8 @@ Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 \references{
 1. T. Cai, W. Liu and X. Luo. A constrained L1 minimization approach to sparse precision matrix estimation. \emph{Journal of the American Statistical Association}, 2011. \cr
 2. H. Liu, L. Wang. TIGER: A tuning-insensitive approach for optimally estimating large undirected graphs. \emph{Technical Report}, 2012. \cr
-3. B. He and X. Yuan. On non-ergodic convergence rate of Douglas-Rachford alternating direction method of multipliers. \emph{Technical Report}, 2012.
+3. B. He and X. Yuan. On non-ergodic convergence rate of Douglas-Rachford alternating direction method of multipliers. \emph{Technical Report}, 2012. \cr
+4. A. Beck and M. Teboulle. Fast gradient-based algorithms for constrained total variation image denoising and deblurring problems. \emph{IEEE Transactions on Image Processing}, 2009.\cr
 }
 
 \seealso{

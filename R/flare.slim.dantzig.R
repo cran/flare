@@ -7,9 +7,10 @@
 # Version: 0.9.7                                                                   #
 #----------------------------------------------------------------------------------#
 
-flare.slim.dantzig <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec)
+flare.slim.dantzig <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept,verbose)
 {
-  cat("Dantzig regression.\n")
+  if(verbose==TRUE)
+    cat("Dantzig regression.\n")
   XY = t(X)%*%Y
   XX = t(X)%*%X
   XXX = t(XX)%*%XX
@@ -19,7 +20,8 @@ flare.slim.dantzig <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite,
   ite.int1 = rep(0,nlambda)
   ite.int2 = rep(0,nlambda)
   beta.list = vector("list", nlambda)
-  intercept=0
+  if(intercept) intercept=1
+  else intercept=0
   str=.C("slim_dantzig", as.double(XY), as.double(XX), as.double(XXX), 
          as.double(beta), as.integer(n), as.integer(d), as.double(rho),
          as.integer(ite.ext), as.integer(ite.int1), as.integer(ite.int2), 

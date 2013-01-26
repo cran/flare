@@ -13,11 +13,11 @@ flare.tiger <- function(data,
                         lambda.min.ratio = NULL,
                         rho = NULL,
                         method = "slasso",
-                        alg = NULL,
                         sym = "or",
                         shrink = NULL,
-                        prec = 1e-3,
-                        max.ite = NULL,
+                        prec = 1e-4,
+                        mu = 0.01,
+                        max.ite = 1e4,
                         wmat = NULL,
                         standardize = FALSE,
                         correlation = FALSE,
@@ -27,18 +27,6 @@ flare.tiger <- function(data,
   if(method!="clime" && method!="slasso" && method!="aclime") {
     cat("\"method\" must be either \"clime\", \"slasso\" or \"aclime\" \n")
     return(NULL)
-  }
-  
-  if(method=="clime") {
-    if(is.null(alg)) alg="hybrid"
-    if(alg!="cdadm" && alg!="ladm" && alg!="hybrid"){
-      cat("\"alg\" must be either \"cdadm\", \"ladm\" or \"hybrid\" when method is \"clime\".\n")
-      return(NULL)
-    }
-  } else {
-    if(is.null(alg)) alg="cdadm"
-    if(alg != "cdadm")
-      cat(sprintf("\"alg\" is \"cdadm\" or leave it empty when method is \"%s\"", method))
   }
   
   n = nrow(data)
@@ -83,7 +71,7 @@ flare.tiger <- function(data,
       }
       if(is.null(lambda.min.ratio))
         lambda.min.ratio = 0.4
-      lambda.max= pi*sqrt(log(d)/n)
+      lambda.max= 2*sqrt(log(d)/n)
       lambda = seq(lambda.max,lambda.min.ratio*lambda.max,length=nlambda)
     }
     else {
@@ -103,18 +91,14 @@ flare.tiger <- function(data,
   est$lambda = lambda
   est$nlambda = nlambda
   
+  begt=Sys.time()
   if(method == "clime" || method == "aclime"){
-    if(method == "clime"){
-      if(is.null(max.ite)){
-        if(alg=="cdadm") max.ite=1e2
-        else max.ite=1e3
-      }
-    }
     if(is.null(rho))
       rho = sqrt(d)
+#       rho = 1
     if (is.logical(perturb)) {
       if (perturb) { 
-        eigvals = eigen(S, only.values=T)$values
+        #eigvals = eigen(S, only.values=T)$values
         #perturb = max(max(max(eigvals) - d*min(eigvals), 0)/(d-1), 1/n)
         perturb = 1/sqrt(n)
       } else {
@@ -124,16 +108,10 @@ flare.tiger <- function(data,
     S = S + diag(d)*perturb
     if(method == "clime"){
       if(is.null(shrink)) shrink=1.5
-      if(alg=="cdadm")
-        re_tiger = flare.tiger.clime.cdadm(S, d, maxdf, lambda, rho, shrink, prec, max.ite)
-      if(alg=="hybrid")
-        re_tiger = flare.tiger.clime.hadm(S, d, maxdf, lambda, rho, shrink, prec, max.ite)
-      if(alg=="ladm")
-        re_tiger = flare.tiger.clime.ladm(S, d, maxdf, lambda, rho, shrink, prec, max.ite)
+      re_tiger = flare.tiger.clime.hadm(S, d, maxdf, lambda, rho, shrink, prec, max.ite)
     }
     if(method == "aclime"){
       if(is.null(shrink)) shrink=0
-      if(is.null(max.ite)) max.ite=3e2
       if(is.null(wmat)){
         #         if(rankMatrix(S)<d)
         #           S = S + diag(d)*1/n
@@ -146,9 +124,11 @@ flare.tiger <- function(data,
   
   if(method == "slasso"){
     if(is.null(shrink)) shrink=0
-    if(is.null(max.ite)) max.ite=1e2
-    re_tiger = flare.tiger.slasso.cdadm(data, n, d, maxdf, lambda, shrink, prec, max.ite)
+    lambda = lambda*sqrt(n)
+    re_tiger = flare.tiger.slasso.mfista(data, n, d, maxdf, mu, lambda, shrink, prec, max.ite)
   }
+  runt=Sys.time()-begt
+  est$runtime = runt
   est$ite = re_tiger$ite
   
   for(j in 1:d) {
@@ -162,7 +142,9 @@ flare.tiger <- function(data,
   }
   G = new("dgCMatrix", Dim = as.integer(c(d*nlambda,d)), x = as.vector(re_tiger$x[1:re_tiger$col_cnz[d+1]]),
           p = as.integer(re_tiger$col_cnz), i = as.integer(re_tiger$row_idx[1:re_tiger$col_cnz[d+1]]))
-  
+  est$x=re_tiger$x
+  est$row_idx=re_tiger$row_idx
+  est$col_cnz=re_tiger$col_cnz
   est$beta = list()
   est$path = list()
   est$df = matrix(0,d,nlambda)

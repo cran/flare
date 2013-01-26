@@ -3,12 +3,15 @@
 #include "R.h"
 #include "math.h"
 #include "slimh.h"
+#include "mymath.h"
 
-void slim_lq(double *Y, double *X, double *XX, double *beta, int *n, int *d, double *rho, int *ite_cnt_ext, int *ite_cnt_int1, int *ite_cnt_int2, double *q, double *lambda, int * nnlambda, int *max_ite, double *prec, int * intercept)
+void slim_lq(double *Y, double *X, double *XX, double *beta, int *n, int *d, double *rho, int *ite_cnt_ext, int *ite_cnt_int1, int *ite_cnt_int2, double *q, double *lambda, int * nnlambda, int *max_ite, double *prec, int * intercept, double * obj, double * runt)
 {
     int j,k,m,ndata,dim,ileft,iright,junk_a,size_a,size_a_pre,w_idx,rs_idx,nlambda;
     int ite1,ite2,ite_ext,gap_ext,max_ite1,max_ite2,max_ite3;
-    double gamma,cc, beta_sum1,beta_dif_sum1,beta_sum2,gap_int,ilambda,ilambda_tmp,tmp1,tmp2,beta_dif,eps,eps1,eps2,max_dif,beta_out1,mu_dif;
+    double gamma,cc,qrt_n, beta_sum1,beta_dif_sum1,beta_sum2,gap_int,F,beta_norm1;
+    double ilambda,ilambda_tmp,tmp1,tmp2,beta_dif,eps,eps1,eps2,max_dif,beta_out1,mu_dif,rho0;
+    clock_t start, end;
 
     dim = *d;
     ndata = *n;
@@ -28,6 +31,7 @@ void slim_lq(double *Y, double *X, double *XX, double *beta, int *n, int *d, dou
     double *X_beta = (double*) malloc(ndata*sizeof(double));
     double *y_i = (double*) malloc(ndata*sizeof(double));
     double *Xy = (double*) malloc(dim*sizeof(double));
+    double *yXbeta = (double*) malloc(ndata*sizeof(double));
     int *iter_step = (int*) malloc(2*sizeof(int));
 
 
@@ -36,10 +40,12 @@ void slim_lq(double *Y, double *X, double *XX, double *beta, int *n, int *d, dou
     max_ite3 = 1e2;
     eps1 = *prec;
     eps2 = 1e-3;
+    rho0 = (*rho);
+    qrt_n = pow(ndata,1/(*q));
     if(*q < 1e6)
-        gamma = 1/((*rho)*pow(ndata,1/(*q)));
+        gamma = 1/(rho0*qrt_n);
     else
-        gamma = sqrt(ndata)/((*rho));
+        gamma = sqrt(ndata)/(rho0);
 
     for(j=0; j<dim; j++) {
         beta0[j] = 0;
@@ -54,14 +60,15 @@ void slim_lq(double *Y, double *X, double *XX, double *beta, int *n, int *d, dou
             
     for(m=0; m<nlambda; m++) {
         ilambda = lambda[m];
+        start = clock();
         max_dif = 1;
 
         if(*q < 1e6)
             for(j=0;j<dim;j++)
-                gamma_col[j] = ilambda/((*rho)*XX_diag[j]);
+                gamma_col[j] = ilambda/(rho0*XX_diag[j]);
         else
             for(j=0;j<dim;j++)
-                gamma_col[j] = ilambda/((*rho)*XX_diag[j]);
+                gamma_col[j] = ilambda/(rho0*XX_diag[j]);
 
         ite_ext=0;
         while(max_dif > eps1 && ite_ext < max_ite1){
@@ -174,7 +181,28 @@ void slim_lq(double *Y, double *X, double *XX, double *beta, int *n, int *d, dou
                 size_a = size_a - junk_a;
                 ite1++;
             }
-            ite_cnt_int1[m] = ite1;
+            ite_cnt_int1[m] += ite1;
+			
+            beta_norm1 = 0;//
+            for(j=0;j<size_a;j++){
+                w_idx = idx_a[j];
+                beta_norm1 += fabs(beta1[w_idx]);//
+            }
+            F = 0;//
+            for(j=0; j<ndata; j++){
+                X_beta[j]=0;
+                for(k=0; k<size_a; k++){
+                    w_idx = idx_a[k];
+                    X_beta[j]+=X[w_idx*ndata+j]*beta1[w_idx];
+                }
+                yXbeta[j] = y_i[j]-X_beta[j];//
+                F += yXbeta[j]*yXbeta[j];//
+            }
+            F = ilambda*beta_norm1+rho0*F/2;//
+            
+            end = clock();
+            runt[m*max_ite1+ite_ext] = (end-start)/ (double)CLOCKS_PER_SEC;
+            obj[m*max_ite1+ite_ext] = F;
 
             beta_sum1 = 0;
             beta_dif_sum1 = 0;
@@ -188,11 +216,11 @@ void slim_lq(double *Y, double *X, double *XX, double *beta, int *n, int *d, dou
             // update mu
             mu_dif = 0;
             for(j=0; j<ndata; j++){
-                X_beta[j]=0;
-                for(k=0; k<size_a; k++){
-                    w_idx = idx_a[k];
-                    X_beta[j]+=X[w_idx*ndata+j]*beta1[w_idx];
-                }
+                //X_beta[j]=0;
+                //for(k=0; k<size_a; k++){
+                //    w_idx = idx_a[k];
+                //    X_beta[j]+=X[w_idx*ndata+j]*beta1[w_idx];
+                //}
                 mu_grad[j]=alp[j]+X_beta[j]-Y[j];
                 mu[j] += mu_grad[j];
                 mu_dif = fabs(mu_grad[j])>mu_dif ? fabs(mu_grad[j]) : mu_dif;
@@ -221,6 +249,7 @@ void slim_lq(double *Y, double *X, double *XX, double *beta, int *n, int *d, dou
     free(alp);
     free(mu);
     free(X_beta);
+    free(yXbeta);
     free(y_i);
     free(Xy);
 }
