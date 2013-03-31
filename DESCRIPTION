@@ -1,8 +1,8 @@
 Package: flare
 Type: Package
 Title: Family of Lasso Regression
-Version: 0.9.8
-Date: 2013-01-26
+Version: 0.9.9
+Date: 2013-03-31
 Author: Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu
 Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 Depends: R (>= 2.15.0), lattice, igraph, MASS, Matrix
@@ -24,5 +24,6 @@ Description: The package "flare" provides the implementation of a
         L1 or adaptive L1 penalty.
 License: GPL-2
 Repository: CRAN
-Packaged: 2013-01-27 05:33:23 UTC; leo
-Date/Publication: 2013-01-27 08:13:22
+Packaged: 2013-04-01 13:12:11 UTC; admin-118
+NeedsCompilation: yes
+Date/Publication: 2013-04-01 15:52:29

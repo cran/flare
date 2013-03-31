@@ -4,7 +4,7 @@
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
 # Date: Nov 23th, 2012                                                             #
-# Version: 0.9.5                                                                   #
+# Version: 0.9.8                                                                   #
 #----------------------------------------------------------------------------------#
 
 flare.slim <- function(X, 
@@ -70,7 +70,7 @@ flare.slim <- function(X,
     if(method=="dantzig")
       lambda.max = max(corr)
     else
-      lambda.max = sqrt(log(d)/n)
+      lambda.max = pi*sqrt(log(d)/n)
       
     lambda.min = lambda.min.ratio*lambda.max
     lambda = exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
@@ -81,18 +81,18 @@ flare.slim <- function(X,
     rho = sqrt(d)
   begt=Sys.time()
   if(method=="dantzig") # dantzig
-    out = flare.slim.dantzig(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec,verbose)
+    out = flare.slim.dantzig(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec,intercept,verbose)
 #     out = flare.slim.dantzig(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec,verbose)
   
   if(method=="lq" && q>=1) {#  && q<1e5 && q!=2 && q!="lasso"
     if(is.null(q)) q=2;
     if(q==1) { # lad lasso
-      lambda = lambda*n
-      out = flare.slim.lad.mfista(Y, xx, lambda, nlambda, n, d, maxdf, mu, max.ite, prec,intercept,verbose)
+#       lambda = lambda*n
+      out = flare.slim.lad.mfista(Y, xx, lambda*n, nlambda, n, d, maxdf, mu, max.ite, prec,intercept,verbose)
     }
     if(q==2) { # sqrt lasso
-      lambda = lambda*sqrt(n)
-      out = flare.slim.sqrt.mfista(Y, xx, lambda, nlambda, n, d, maxdf, mu, max.ite, prec,intercept,verbose)
+#       lambda = lambda*sqrt(n)
+      out = flare.slim.sqrt.mfista(Y, xx, lambda*sqrt(n), nlambda, n, d, maxdf, mu, max.ite, prec,intercept,verbose)
     }
     if(q>1 && q<2)
       out = flare.slim.lq(yy, xx, q, lambda, nlambda, n, d, maxdf, rho, max.ite, prec,intercept,verbose)

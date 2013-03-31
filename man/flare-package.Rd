@@ -12,8 +12,8 @@ The package "flare" provides the implementation of a family of Lasso variants in
 \tabular{ll}{
 Package: \tab flare\cr
 Type: \tab Package\cr
-Version: \tab 0.9.8\cr
-Date: \tab 2013-01-26\cr
+Version: \tab 0.9.9\cr
+Date: \tab 2013-03-31\cr
 License: \tab GPL-2\cr
 }
 }

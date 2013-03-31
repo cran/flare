@@ -1,7 +1,7 @@
-cb78cdad8bf2894fd96db7cba7292fd9 *DESCRIPTION
+bc8a1e5fc1b02adddda7c0febb4fe2d8 *DESCRIPTION
 f6b58b0742e14bcf36967e9cd478442a *NAMESPACE
 e26545f7bf97c3f35432cc4e32bd6e5b *R/flare.plot.R
-bea3fa9cebaf182ad6b438aaf012dcb9 *R/flare.slim.R
+1811e6d0c4703242ddeb324124cc838a *R/flare.slim.R
 44ca172d2b8f8cc4df1e327e40cb6f46 *R/flare.slim.dantzig.R
 ae4cc3831051b58b92fe3f6444c8c566 *R/flare.slim.lad.mfista.R
 2dfc15d121d523b6249df19be7deb9a6 *R/flare.slim.lq.R
@@ -18,10 +18,10 @@ b6de65d226adf3ecc1b5146b3c57de5c *R/flare.tiger.cv.R
 c576332fdc932a03588c412855fbeea5 *data/eyedata.rda
 cd89fdee0965468895055cd5b4366d91 *inst/doc/flare.pdf
 be3aff9967dedaaf731746577e960a21 *inst/doc/vignette.Rnw
-55292b228b27cff0857c6d5087782743 *inst/doc/vignette.pdf
+48e86a81166c144589a55d8fb9cf7b1d *inst/doc/vignette.pdf
 44fe216985abb04674f15486674428bb *man/eyedata.Rd
 caab8818520d821479ce06c5c47b8d9b *man/flare-internal.Rd
-2cf1c6201f6757285bf773c99b62f53c *man/flare-package.Rd
+41689756d5ec9c0c749ab534e8386c5f *man/flare-package.Rd
 11c171afce44062a85b903feccefa1da *man/flare.plot.Rd
 45dfc667d759855deec87c8d8ae27bca *man/flare.slim.Rd
 a0f5073d2daf86693affe25607b42cb0 *man/flare.tiger.Rd
