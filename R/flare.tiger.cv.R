@@ -3,8 +3,8 @@
 # flare.tiger.cv(): Cross validation for regularization parameter                  #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
-# Date: Aug 3rd, 2012                                                              #
-# Version: 0.9.2                                                                   #
+# Date: Aug 25th, 2013                                                             #
+# Version: 1.0.0                                                                   #
 #----------------------------------------------------------------------------------#
 
 flare.tiger.cv <- function(obj, loss=c("likelihood", "tracel2"), fold=5) {

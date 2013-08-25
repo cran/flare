@@ -5,8 +5,8 @@
 #                     2.stability approach to regularization selection (stars)     #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
-# Date: Aug 3rd, 2012                                                              #
-# Version: 0.9.2                                                                   #
+# Date: Aug 25th, 2013                                                             #
+# Version: 1.0.0                                                                   #
 #----------------------------------------------------------------------------------#
 
 ## Main Function

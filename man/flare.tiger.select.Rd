@@ -10,9 +10,9 @@ Implements the regularization parameter selection for high dimensional undirecte
 }
 
 \usage{
-flare.tiger.select(est, criterion = "stars", stars.subsample.ratio = NULL, 
-                  stars.thresh = 0.1,rep.num = 20, fold = 5, 
-                  loss="likelihood", verbose = TRUE)
+flare.tiger.select(est, criterion = "stars", stars.subsample.ratio = 
+                   NULL, stars.thresh = 0.1,rep.num = 20, fold = 5, 
+                   loss="likelihood", verbose = TRUE)
 }
 
 \arguments{

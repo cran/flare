@@ -11,7 +11,7 @@ Implements the data generation from multivariate normal distributions with diffe
 
 \usage{
 flare.tiger.generator(n = 200, d = 50, graph = "random", v = NULL, u = NULL,
-      g = NULL, prob = NULL, seed = NULL, vis = FALSE, verbose = TRUE)
+            g = NULL, prob = NULL, seed = NULL, vis = FALSE, verbose = TRUE)
 }
 
 \arguments{

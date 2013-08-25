@@ -3,29 +3,27 @@
 # flare.tiger(): The user interface for tiger()                                    #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
-# Date: Aug 17th, 2012                                                             #
-# Version: 0.9.4                                                                   #
+# Date: Aug 25th, 2013                                                             #
+# Version: 1.0.0                                                                   #
 #----------------------------------------------------------------------------------#
 
 flare.tiger <- function(data,
                         lambda = NULL,
                         nlambda = NULL,
                         lambda.min.ratio = NULL,
-                        rho = NULL,
                         method = "slasso",
                         sym = "or",
                         shrink = NULL,
                         prec = 1e-4,
                         mu = 0.01,
                         max.ite = 1e4,
-                        wmat = NULL,
                         standardize = FALSE,
                         correlation = FALSE,
                         perturb = TRUE,
                         verbose = TRUE)
 {
-  if(method!="clime" && method!="slasso" && method!="aclime") {
-    cat("\"method\" must be either \"clime\", \"slasso\" or \"aclime\" \n")
+  if(method!="clime" && method!="slasso") {
+    cat("\"method\" must be either \"clime\" or \"slasso\". \n")
     return(NULL)
   }
   
@@ -67,7 +65,7 @@ flare.tiger <- function(data,
   {
     if(method == "slasso") {
       if(is.null(nlambda)){
-        nlambda = 5
+        nlambda = 10
       }
       if(is.null(lambda.min.ratio))
         lambda.min.ratio = 0.4
@@ -76,10 +74,10 @@ flare.tiger <- function(data,
     }
     else {
       if(is.null(nlambda))
-        nlambda = 5
+        nlambda = 10
       if(is.null(lambda.min.ratio))
-        lambda.min.ratio = 0.4
-        lambda.max = min(max(S-diag(diag(S))),-min(S-diag(diag(S))))
+        lambda.min.ratio = 0.1
+        lambda.max = max(diag(S))
       #lambda.max = pi*sqrt(log(d)/n)
       lambda.min = lambda.min.ratio*lambda.max
       lambda = exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
@@ -92,10 +90,7 @@ flare.tiger <- function(data,
   est$nlambda = nlambda
   
   begt=Sys.time()
-  if(method == "clime" || method == "aclime"){
-    if(is.null(rho))
-      rho = sqrt(d)
-#       rho = 1
+  if(method == "clime"){
     if (is.logical(perturb)) {
       if (perturb) { 
         #eigvals = eigen(S, only.values=T)$values
@@ -106,20 +101,8 @@ flare.tiger <- function(data,
       }
     }
     S = S + diag(d)*perturb
-    if(method == "clime"){
-      if(is.null(shrink)) shrink=1.5
-      re_tiger = flare.tiger.clime.hadm(S, d, maxdf, lambda, rho, shrink, prec, max.ite)
-    }
-    if(method == "aclime"){
-      if(is.null(shrink)) shrink=0
-      if(is.null(wmat)){
-        #         if(rankMatrix(S)<d)
-        #           S = S + diag(d)*1/n
-        wmat = 1/(abs(solve(S))+1/n)
-      }
-      re_tiger = flare.tiger.aclime.cdadm(S, wmat, n, d, maxdf, lambda, rho, shrink, prec, max.ite)
-      est$wmat = wmat
-    }
+    if(is.null(shrink)) shrink=0
+    re_tiger = flare.tiger.clime.mfista(S, d, maxdf, mu, lambda, shrink, prec, max.ite)
   }
   
   if(method == "slasso"){

@@ -11,7 +11,7 @@ Implements the graph visualization using adjacency matrix. It can automatic orga
 
 \usage{
 flare.plot(G, epsflag = FALSE, graph.name = "default", cur.num = 1, 
-          location)
+           location)
 }
 
 \arguments{

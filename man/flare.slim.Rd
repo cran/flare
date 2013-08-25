@@ -6,13 +6,13 @@ Sparse Linear Regression using Non-smooth Loss Functions and L1 Regularization
 }
 
 \description{
-The function "flare.slim" implements a family of Lasso variants for estimating high dimensional sparse linear models including Dantzig Selector, LAD Lasso, SQRT Lasso, Lq Lasso for estimating high dimensional sparse linear model. For Dantzig selector and Lq Lasso, we adopt alternating direction method of multipliers (ADMM) convert the original optimization problem into a sequential L1-penalized least square minimization problem, which can be efficiently solved by combining the linearization and the efficient coordinate descent algorithm. For SQRT and LAD Lasso, we adopt the combination of the dual smoothing and monotone fast iterative soft-thresholding algorithm. The computation is memory-optimized using the sparse matrix output. 
+The function "flare.slim" implements a family of Lasso variants for estimating high dimensional sparse linear models including Dantzig Selector, LAD Lasso, SQRT Lasso for estimating high dimensional sparse linear model. We adopt the combination of the dual smoothing and monotone fast iterative soft-thresholding algorithm. The computation is memory-optimized using the sparse matrix output. 
 }
 
 \usage{
 flare.slim(X, Y, lambda = NULL, nlambda = NULL, lambda.min.ratio = NULL,
-           rho = NULL, method="lq", q = 2, prec = 1e-4,
-           max.ite = 1e4, mu = 0.01, intercept = TRUE, verbose = TRUE)
+           method="lq", q = 2, prec = 1e-4, max.ite = 1e4, mu = 0.01,
+           intercept = TRUE, verbose = TRUE)
 }
 
 \arguments{
@@ -21,9 +21,8 @@ flare.slim(X, Y, lambda = NULL, nlambda = NULL, lambda.min.ratio = NULL,
   \item{lambda}{A sequence of decresing positive value to control the regularization. Typical usage is to leave the input \code{lambda = NULL} and have the program compute its own \code{lambda} sequence based on \code{nlambda} and \code{lambda.min.ratio}. Users can also specify a sequence to override this. Default value is from \eqn{lambda.max} to \code{lambda.min.ratio*lambda.max}. For Lq regression, the default value of \eqn{lambda.max} is \eqn{\pi\sqrt{\log(d)/n}}. For Dantzig selector, the default value of \eqn{lambda.max} is the minimum regularization parameter, which yields an all-zero estiamtes.}
   \item{nlambda}{The number of values used in \code{lambda}. Default value is 5.}
   \item{lambda.min.ratio}{The smallest value for \code{lambda}, as a fraction of the uppperbound (\code{MAX}) of the regularization parameter. The program can automatically generate \code{lambda} as a sequence of length = \code{nlambda} starting from \code{MAX} to \code{lambda.min.ratio*MAX} in log scale. The default value is \code{0.25} for Lq Lasso and \code{0.5} for Dantzig selector.}
-  \item{rho}{The penalty parameter used in ADMM.}
   \item{method}{Dantzig selector is applied if \code{method = "dantzig"} and \eqn{L_q} Lasso is applied if \code{method = "lq"}. The default value is \code{"lq"}.}
-  \item{q}{The loss function used in Lq Lasso. It is only applicable when \code{method = "lq"} and must be in \eqn{[1,2]}. The default value is 2.}
+  \item{q}{The loss function used in Lq Lasso. It is only applicable when \code{method = "lq"} and must be either 1 or 2. The default value is 2.}
   \item{prec}{Stopping criterion. The default value is 1e-4.}
   \item{max.ite}{The iteration limit. The default value is 1e4.}
   \item{mu}{The smoothing parameter. The default value is 0.01.}
@@ -95,12 +94,12 @@ beta = c(3,2,0,1.5,rep(0,d-4))
 ## Generate response using Gaussian noise, and fit a sparse linear model using SQRT Lasso
 eps.sqrt = rnorm(n)
 Y.sqrt = X\%*\%beta + eps.sqrt
-out.sqrt = flare.slim(X = X, Y = Y.sqrt)
+out.sqrt = flare.slim(X = X, Y = Y.sqrt, lambda = seq(0.8,0.2,length.out=5))
 
 ## Generate response using Cauchy noise, and fit a sparse linear model using LAD Lasso
 eps.lad = rt(n = n, df = 1)
 Y.lad = X\%*\%beta + eps.lad
-out.lad = flare.slim(X = X, Y = Y.lad, q = 1)
+out.lad = flare.slim(X = X, Y = Y.lad, q = 1, lambda = seq(0.5,0.2,length.out=5))
 
 ## Visualize the solution path
 plot(out.sqrt)

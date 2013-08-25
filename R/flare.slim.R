@@ -3,8 +3,8 @@
 # flare.slim(): The user interface for slim()                                      #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
-# Date: Nov 23th, 2012                                                             #
-# Version: 0.9.8                                                                   #
+# Date: Aug 25th, 2013                                                             #
+# Version: 1.0.0                                                                   #
 #----------------------------------------------------------------------------------#
 
 flare.slim <- function(X, 
@@ -12,7 +12,6 @@ flare.slim <- function(X,
                        lambda = NULL,
                        nlambda = NULL,
                        lambda.min.ratio = NULL,
-                       rho = NULL,
                        method="lq",
                        q = 2,
                        prec = 1e-4,
@@ -22,12 +21,12 @@ flare.slim <- function(X,
                        verbose = TRUE)
 {
   if(method!="dantzig" && method!="lq"){
-    cat("\"method\" must be dantzig, lasso or lq.\n")
+    cat("\"method\" must be dantzig or lq lasso.\n")
     return(NULL)
   }
   if(method=="lq"){
-    if(q<1 || q>2){
-      cat("q must be in [1, 2] when method = \"lq\".\n")
+    if(q!=1 && q!=2){
+      cat("q must be either 1 or 2 when method = \"lq\".\n")
       return(NULL)
     }
   } else q=0
@@ -37,10 +36,7 @@ flare.slim <- function(X,
   n = nrow(X)
   d = ncol(X)
   maxdf = max(n,d)
-  #   if(intercept){
-  #     X = cbind(rep(1, n), X)
-  #     d = d+1
-  #   }
+  
   xm=matrix(rep(.colMeans(X,n,d),n),nrow=n,ncol=d,byrow=T)
   x1=X-xm
   sdx=sqrt(diag(t(x1)%*%x1)/(n-1))
@@ -53,7 +49,7 @@ flare.slim <- function(X,
   corr=cor(xx,yy)
   
   if(intercept){
-    xx = cbind(rep(1, n), xx)
+    xx = cbind(rep(1, nrow(xx)), xx)
     d = d+1
   }
   
@@ -77,25 +73,18 @@ flare.slim <- function(X,
     rm(lambda.max,lambda.min,lambda.min.ratio)
     gc()
   }
-  if(is.null(rho))
-    rho = sqrt(d)
   begt=Sys.time()
   if(method=="dantzig") # dantzig
-    out = flare.slim.dantzig(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec,intercept,verbose)
-#     out = flare.slim.dantzig(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec,verbose)
-  
-  if(method=="lq" && q>=1) {#  && q<1e5 && q!=2 && q!="lasso"
+    out = flare.slim.dantzig.mfista(yy, xx, lambda, nlambda, n, d, maxdf, mu, max.ite, prec,intercept,verbose)
+
+  if(method=="lq") {
     if(is.null(q)) q=2;
     if(q==1) { # lad lasso
-#       lambda = lambda*n
       out = flare.slim.lad.mfista(Y, xx, lambda*n, nlambda, n, d, maxdf, mu, max.ite, prec,intercept,verbose)
     }
     if(q==2) { # sqrt lasso
-#       lambda = lambda*sqrt(n)
       out = flare.slim.sqrt.mfista(Y, xx, lambda*sqrt(n), nlambda, n, d, maxdf, mu, max.ite, prec,intercept,verbose)
     }
-    if(q>1 && q<2)
-      out = flare.slim.lq(yy, xx, q, lambda, nlambda, n, d, maxdf, rho, max.ite, prec,intercept,verbose)
   }
   runt=Sys.time()-begt
   
@@ -115,11 +104,6 @@ flare.slim <- function(X,
         beta1[,k]=Cxinv%*%tmp.beta
       }
     }
-#     else{
-#       for(k in 1:nlambda){
-#         beta1[,k]=out$beta[[k]]
-#       }
-#     }
     else{
       for(k in 1:nlambda){
         intcpt[k]=ym-xm[1,]%*%Cxinv%*%out$beta[[k]]*sdy
@@ -156,10 +140,6 @@ flare.slim <- function(X,
   est$ite =out$ite
   est$verbose = verbose
   est$runtime = runt
-  if(method=="lq"){
-    est$obj = out$obj
-    est$runt = out$runt
-  }
   class(est) = "slim"
   return(est)
 }

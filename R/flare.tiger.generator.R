@@ -3,8 +3,8 @@
 # flare.generator(): Data generator                                                 #
 # Author: Xingguo Li                                                                #
 # Email: <xingguo.leo@gmail.com>                                                    #
-# Date: Aug 17th, 2012                                                              #
-# Version: 0.9.4                                                                    #
+# Date: Aug 25th, 2013                                                              #
+# Version: 1.0.0                                                                    #
 #-----------------------------------------------------------------------------------#
 
 ## Main function

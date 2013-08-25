@@ -5,11 +5,12 @@
 #include "R.h"
 #include "mymath.h"
 
-void slim_sqrt_mfista(double *b, double *A, double *AA, double *beta, int *n, int *d, double *mu, int *ite_cnt, double *lambda, int * nnlambda, int *max_ite, double *prec, double *L, double *obj, double *runt, int *intercept)
+void slim_sqrt_mfista(double *b, double *A, double *beta, int *n, int *d, double *mu, int *ite_cnt_init, int *ite_cnt_ex, int *ite_cnt_in, double *lambda, int * nnlambda, int *max_ite, double *prec, double *L, int *intercept)
 {
-    int i,j,m,dim,ndata,nlambda,max_ite1,ite1,ite2,gap_track;
+    int i,j,m,dim,ndata,nlambda,max_ite1,ite0,ite1,ite2,ite21,gap_track;
     int size_x0, size_y1, size_z1, w_idx;
-    double T,T0,imu,cpuTime,u_norm_y,u_norm_z,u_norm_x,u_norm2y,u_norm2z,u_norm2x,u_norm1x,x0_norm1,x1_norm1,y1_norm1,z1_norm1,y1_norm1_pre,obj_base,munru2,ilambda,Q,Fx,Fz;
+    double T,T0,imu,cpuTime,opt_dif;
+    double x1_norm1,y1_norm1,z1_norm1,y1_norm1_pre,obj_base,ilambda,Q,Fx,Fz;
     double norm_dif,z_dif,x_dif,y1_dif,obj_tmp,eps1,t1,t2,ratio,epsT;
     clock_t start, end;
 
@@ -31,16 +32,13 @@ void slim_sqrt_mfista(double *b, double *A, double *AA, double *beta, int *n, in
     double *u_y = (double*) malloc(ndata*sizeof(double));
     double *u_z = (double*) malloc(ndata*sizeof(double));
     double *u_x = (double*) malloc(ndata*sizeof(double));
-    double *Ax0 = (double*) malloc(ndata*sizeof(double));
     double *bAx0 = (double*) malloc(ndata*sizeof(double));
-    double *Ay1 = (double*) malloc(ndata*sizeof(double));
     double *bAy1 = (double*) malloc(ndata*sizeof(double));
-    double *Az1 = (double*) malloc(ndata*sizeof(double));
     double *bAz1 = (double*) malloc(ndata*sizeof(double));
     double *g = (double*) malloc(dim*sizeof(double));
-    double *idx_x0 = (double*) malloc(dim*sizeof(double));
-    double *idx_y1 = (double*) malloc(dim*sizeof(double));
-    double *idx_z1 = (double*) malloc(dim*sizeof(double));
+    int *idx_x0 = (int*) malloc(dim*sizeof(int));
+    int *idx_y1 = (int*) malloc(dim*sizeof(int));
+    int *idx_z1 = (int*) malloc(dim*sizeof(int));
     
     for(i=0;i<dim;i++){
         x1[i]=0;
@@ -60,39 +58,14 @@ void slim_sqrt_mfista(double *b, double *A, double *AA, double *beta, int *n, in
 
         t1 = 1;
         ilambda = lambda[m];
-        start = clock();
-        u_norm_y = 0;
-        for(i=0;i<ndata;i++){
-            Ay1[i]=0;
-            for(j=0;j<size_y1;j++){
-                w_idx = idx_y1[j];
-                Ay1[i]+=A[w_idx*ndata+i]*y1[w_idx];
-            }
-            bAy1[i] = b[i]-Ay1[i];
-            u_y[i]=bAy1[i]/imu;
-            u_norm_y += u_y[i]*u_y[i];
-        }
-        u_norm2y = u_norm_y;
-        u_norm_y = sqrt(u_norm_y);
-        if(u_norm_y>=1){
-            u_norm2y = 0;
-            for(i=0;i<ndata;i++){
-                u_y[i] = u_y[i]/u_norm_y;
-                u_norm2y += u_y[i]*u_y[i];
-            }
-        }
-        for(i=0;i<dim;i++){
-            g[i]=0;
-            for(j=0;j<ndata;j++){
-                g[i]-=A[i*ndata+j]*u_y[j];
-            }
-        }
-        obj_base = 0;
-        for(i=0;i<ndata;i++){
-            obj_base += u_y[i]*bAy1[i];
-        }
-        obj_base += imu*u_norm2y;
+    
+        get_residual(bAy1, b, A, y1, idx_y1, &ndata, &size_y1); // bAy1=b-A*y1
+        get_dual2(u_y, bAy1, &imu, &ndata); //u_y=proj(bAy1)
+        get_grad(g, A, u_y, &dim, &ndata); //g=-A*u_y
+        get_base(&obj_base, u_y, bAy1, &imu, &ndata); //obj_base=u_y*bAy1-imu*||u_y||_2^2/2
+
         gap_track = 1;
+        ite0 = 0;
         while(gap_track == 1 && T>epsT){
             Q = obj_base;
             z1_norm1 = 0;
@@ -111,35 +84,18 @@ void slim_sqrt_mfista(double *b, double *A, double *AA, double *beta, int *n, in
                 }
             }
             Q += ilambda*z1_norm1;
-            u_norm_z = 0;
-            for(i=0;i<ndata;i++){
-                Az1[i]=0;
-                for(j=0;j<size_z1;j++){
-                    w_idx=idx_z1[j];
-                    Az1[i]+=A[w_idx*ndata+i]*z1[w_idx];
-                }
-                bAz1[i] = b[i]-Az1[i];
-                u_z[i]=bAz1[i]/imu;
-                u_norm_z += u_z[i]*u_z[i];
-            }
-            u_norm2z = u_norm_z;
-            u_norm_z = sqrt(u_norm_z);
-            if(u_norm_z>=1){
-                u_norm2z = 0;
-                for(i=0;i<ndata;i++){
-                    u_z[i] = u_z[i]/u_norm_z;
-                    u_norm2z += u_z[i]*u_z[i];
-                }
-            }
-            Fz = 0;
-            for(i=0;i<ndata;i++){
-                Fz += u_z[i]*bAz1[i];
-            }
-            Fz += imu*u_norm2z+ilambda*z1_norm1;
+            
+            get_residual(bAz1, b, A, z1, idx_z1, &ndata, &size_z1); // bAz1=b-A*z1
+            get_dual2(u_z, bAz1, &imu, &ndata); //u_z=proj(bAz1)
+            get_base(&Fz, u_z, bAz1, &imu, &ndata); //obj_base=u_z*bAz1-imu*||u_z||_2^2/2
+            
+            Fz += z1_norm1*ilambda;
+            ite0++;
             if(Fz<Q) T = T*ratio;
             else {
                 T = T/ratio;
-                gap_track = 0;
+                if(ite0>1)
+                    gap_track = 0;
             }
         }
 
@@ -157,61 +113,15 @@ void slim_sqrt_mfista(double *b, double *A, double *AA, double *beta, int *n, in
             }
         }
         t2 = (1+sqrt(1+4*t1*t1))/2;
-        u_norm_z = 0;
-        for(i=0;i<ndata;i++){
-            Az1[i]=0;
-            for(j=0;j<size_z1;j++){
-                w_idx=idx_z1[j];
-                Az1[i]+=A[w_idx*ndata+i]*z1[w_idx];
-            }
-            bAz1[i] = b[i]-Az1[i];
-            u_z[i]=bAz1[i]/imu;
-            u_norm_z += u_z[i]*u_z[i];
-        }
-        u_norm2z = u_norm_z;
-        u_norm_z = sqrt(u_norm_z);
-        if(u_norm_z>=1){
-            u_norm2z = 0;
-            for(i=0;i<ndata;i++){
-                u_z[i] = u_z[i]/u_norm_z;
-                u_norm2z += u_z[i]*u_z[i];
-            }
-        }
-        Fz = 0;
-        for(i=0;i<ndata;i++){
-            Fz += u_z[i]*bAz1[i];
-        }
-        Fz += imu*u_norm2z+ilambda*z1_norm1;
+        get_residual(bAz1, b, A, z1, idx_z1, &ndata, &size_z1); // bAz1=b-A*z1
+        get_dual2(u_z, bAz1, &imu, &ndata); //u_z=proj(bAz1)
+        get_base(&Fz, u_z, bAz1, &imu, &ndata); //obj_base=u_z*bAz1-imu*||u_z||_2^2/2
+        Fz += z1_norm1*ilambda;
 
-        u_norm_x = 0;
-        for(i=0;i<ndata;i++){
-            Ax0[i]=0;
-            for(j=0;j<size_x0;j++){
-                w_idx=idx_x0[j];
-                Ax0[i]+=A[w_idx*ndata+i]*x0[w_idx];
-            }
-            bAx0[i] = b[i]-Ax0[i];
-            u_x[i]=bAx0[i]/imu;
-            u_norm_x += u_x[i]*u_x[i];
-        }
-        u_norm2x = u_norm_x;
-        u_norm_x = sqrt(u_norm_x);
-        if(u_norm_x>=1){
-            u_norm2x = 0;
-            for(i=0;i<ndata;i++){
-                u_x[i] = u_x[i]/u_norm_x;
-                u_norm2x += u_x[i]*u_x[i];
-            }
-        }
-        Fx = 0;
-        for(i=0;i<ndata;i++){
-            Fx += u_x[i]*bAx0[i];
-        }
-        x0_norm1 = 0;
-        for(i=0;i<dim;i++){
-            x0_norm1 += fabs(x0[i]);
-        }
-        Fx += imu*u_norm2x+ilambda*x0_norm1;
+        get_residual(bAx0, b, A, x0, idx_x0, &ndata, &size_x0); // bAx0=b-A*x0
+        get_dual2(u_x, bAx0, &imu, &ndata); //u_x=proj(bAx0)
+        get_base(&Fx, u_x, bAx0, &imu, &ndata); //obj_base=u_x*bAx0-imu*||u_x||_2^2/2
+        Fx += l1norm(x0, dim)*ilambda;
         
         if(Fx>Fz){
             for(i=0;i<dim;i++)
@@ -242,43 +152,18 @@ void slim_sqrt_mfista(double *b, double *A, double *AA, double *beta, int *n, in
 //if(m==0)
 //printf("Q=%f,F=%f,T=%f,T0=%f \n",Q,F,T,T0);
         ite1=0;
+        ite21=0;
         y1_dif = 1;
+        opt_dif = 1;
+        get_residual(bAy1, b, A, y1, idx_y1, &ndata, &size_y1); // bAy1=b-A*y1
+        get_dual2(u_y, bAy1, &imu, &ndata); //u_y=proj(bAy1)
+        get_grad(g, A, u_y, &dim, &ndata); //g=-A*u_y
         while(y1_dif>eps1 && ite1<max_ite1){
+        //while(opt_dif>eps1 && ite1<max_ite1){
             y1_norm1_pre = y1_norm1;
-            u_norm_y = 0;
-            for(i=0;i<ndata;i++){
-                Ay1[i]=0;
-                for(j=0;j<size_y1;j++){
-                    w_idx = idx_y1[j];
-                    Ay1[i]+=A[w_idx*ndata+i]*y1[w_idx];
-                }
-                bAy1[i] = b[i]-Ay1[i];
-                u_y[i]=bAy1[i]/imu;
-                u_norm_y += u_y[i]*u_y[i];
-            }
-            u_norm2y = u_norm_y;
-            u_norm_y = sqrt(u_norm_y);
-            if(u_norm_y>=1){
-                u_norm2y = 0;
-                for(i=0;i<ndata;i++){
-                    u_y[i] = u_y[i]/u_norm_y;
-                    u_norm2y += u_y[i]*u_y[i];
-                }
-            }
-            for(i=0;i<dim;i++){
-                g[i]=0;
-                for(j=0;j<ndata;j++){
-                    g[i]-=A[i*ndata+j]*u_y[j];
-                }
-            }
-        
             ite2=0;
             if(T<T0){
-                obj_base = 0;
-                for(i=0;i<ndata;i++){
-                    obj_base += u_y[i]*bAy1[i];
-                }
-                obj_base += imu*u_norm2y;
+                get_base(&obj_base, u_y, bAy1, &imu, &ndata); //obj_base=u_y*bAy1-imu*||u_y||_2^2/2
                 gap_track = 1;
                 while(gap_track == 1){
                     Q = obj_base;
@@ -298,31 +183,11 @@ void slim_sqrt_mfista(double *b, double *A, double *AA, double *beta, int *n, in
                         }
                     }
                     Q += ilambda*z1_norm1;
-                    u_norm_z = 0;
-                    for(i=0;i<ndata;i++){
-                        Az1[i]=0;
-                        for(j=0;j<size_z1;j++){
-                            w_idx=idx_z1[j];
-                            Az1[i]+=A[w_idx*ndata+i]*z1[w_idx];
-                        }
-                        bAz1[i] = b[i]-Az1[i];
-                        u_z[i]=bAz1[i]/imu;
-                        u_norm_z += u_z[i]*u_z[i];
-                    }
-                    u_norm2z = u_norm_z;
-                    u_norm_z = sqrt(u_norm_z);
-                    if(u_norm_z>=1){
-                        u_norm2z = 0;
-                        for(i=0;i<ndata;i++){
-                            u_z[i] = u_z[i]/u_norm_z;
-                            u_norm2z += u_z[i]*u_z[i];
-                        }
-                    }
-                    Fz = 0;
-                    for(i=0;i<ndata;i++){
-                        Fz += u_z[i]*bAz1[i];
-                    }
-                    Fz += ilambda*z1_norm1 + imu*u_norm2z;
+                    
+                    get_residual(bAz1, b, A, z1, idx_z1, &ndata, &size_z1); // bAz1=b-A*z1
+                    get_dual2(u_z, bAz1, &imu, &ndata); //u_z=proj(bAz1)
+                    get_base(&Fz, u_z, bAz1, &imu, &ndata); //obj_base=u_z*bAz1-imu*||u_z||_2^2/2
+                    Fz += z1_norm1*ilambda;
                     if(Fz>Q) T = T/ratio;
                     else gap_track = 0;
                     ite2++;
@@ -345,62 +210,17 @@ void slim_sqrt_mfista(double *b, double *A, double *AA, double *beta, int *n, in
             }
 
             t2 = (1+sqrt(1+4*t1*t1))/2;
-            u_norm_z = 0;
-            for(i=0;i<ndata;i++){
-                Az1[i]=0;
-                for(j=0;j<size_z1;j++){
-                    w_idx=idx_z1[j];
-                    Az1[i]+=A[w_idx*ndata+i]*z1[w_idx];
-                }
-                bAz1[i] = b[i]-Az1[i];
-                u_z[i]=bAz1[i]/imu;
-                u_norm_z += u_z[i]*u_z[i];
-            }
-            u_norm2z = u_norm_z;
-            u_norm_z = sqrt(u_norm_z);
-            if(u_norm_z>=1){
-                u_norm2z = 0;
-                for(i=0;i<ndata;i++){
-                    u_z[i] = u_z[i]/u_norm_z;
-                    u_norm2z += u_z[i]*u_z[i];
-                }
-            }
-            Fz = 0;
-            for(i=0;i<ndata;i++){
-                Fz += u_z[i]*bAz1[i];
-            }
-            Fz += imu*u_norm2z + ilambda*z1_norm1;
-
-            u_norm_x = 0;
-            for(i=0;i<ndata;i++){
-                Ax0[i]=0;
-                for(j=0;j<size_x0;j++){
-                    w_idx=idx_x0[j];
-                    Ax0[i]+=A[w_idx*ndata+i]*x0[w_idx];
-                }
-                bAx0[i] = b[i]-Ax0[i];
-                u_x[i]=bAx0[i]/imu;
-                u_norm_x += u_x[i]*u_x[i];
-            }
-            u_norm2x = u_norm_x;
-            u_norm_x = sqrt(u_norm_x);
-            if(u_norm_x>=1){
-                u_norm2x = 0;
-                for(i=0;i<ndata;i++){
-                    u_x[i] = u_x[i]/u_norm_x;
-                    u_norm2x += u_x[i]*u_x[i];
-                }
-            }
-            Fx = 0;
-            for(i=0;i<ndata;i++){
-                Fx += u_x[i]*bAx0[i];
-            }
-            x0_norm1 = 0;
-            for(i=0;i<dim;i++){
-                x0_norm1 += fabs(x0[i]);
-            }
-            Fx += imu*u_norm2x + ilambda*x0_norm1;
             
+            get_residual(bAz1, b, A, z1, idx_z1, &ndata, &size_z1); // bAz1=b-A*z1
+            get_dual2(u_z, bAz1, &imu, &ndata); //u_z=proj(bAz1)
+            get_base(&Fz, u_z, bAz1, &imu, &ndata); //obj_base=u_z*bAz1-imu*||u_z||_2^2/2
+            Fz += z1_norm1*ilambda;
+
+            get_residual(bAx0, b, A, x0, idx_x0, &ndata, &size_x0); // bAx0=b-A*x0
+            get_dual2(u_x, bAx0, &imu, &ndata); //u_x=proj(bAx0)
+            get_base(&Fx, u_x, bAx0, &imu, &ndata); //obj_base=u_x*bAx0-imu*||u_x||_2^2/2
+            Fx += l1norm(x0, dim)*ilambda;
+        
             if(Fx>Fz){
                 for(i=0;i<dim;i++)
                     x1[i] = z1[i];
@@ -414,6 +234,7 @@ void slim_sqrt_mfista(double *b, double *A, double *AA, double *beta, int *n, in
             x1_norm1 = 0;
             size_x0 = 0;
             size_y1 = 0;
+            y1_dif = 0;
             for(i=0;i<dim;i++){
                 y2[i] = x1[i]+(x1[i]-x0[i])*(t1-1)/t2+(z1[i]-x1[i])*t1/t2;
                 z0[i] = z1[i];
@@ -422,40 +243,30 @@ void slim_sqrt_mfista(double *b, double *A, double *AA, double *beta, int *n, in
                     idx_x0[size_x0]=i;
                     size_x0++;
                 }
+                //y1_dif += fabs(y1[i] - y2[i]);
                 y1[i] = y2[i];
                 if(y1[i]!=0){
                     idx_y1[size_y1]=i;
                     size_y1++;
                 }
                 y1_norm1 += fabs(y1[i]);
-                x1_norm1 += fabs(x1[i]);
             }
             y1_dif = fabs(y1_norm1 - y1_norm1_pre);
             t1 = t2;
 
-            end = clock();
-            runt[m*max_ite1+ite1] = (end-start)/ (double)CLOCKS_PER_SEC;
-            obj_tmp = 0;
-            for(i=0;i<ndata;i++){
-                Ax0[i]=0;
-                for(j=0;j<size_x0;j++){
-                    w_idx=idx_x0[j];
-                    Ax0[i]+=A[w_idx*ndata+i]*x0[w_idx];
-                }
-                bAx0[i] = b[i]-Ax0[i];
-                obj_tmp += bAx0[i]*bAx0[i];
-            }
-            obj[m*max_ite1+ite1] = sqrt(obj_tmp)+ilambda*x1_norm1;
-
-//if(m==0)// && ite1%20==0
-//printf("ite_ext=%d,ite_int=%d,Q=%f,F=%f,obj2=%f,T=%f,T0=%f \n",ite1,ite2,Q,F,obj[m*max_ite1+ite1],T,T0);
+            get_residual(bAy1, b, A, y1, idx_y1, &ndata, &size_y1); // bAy1=b-A*y1
+            get_dual2(u_y, bAy1, &imu, &ndata); //u_y=proj(bAy1)
+            get_grad(g, A, u_y, &dim, &ndata); //g=-A*u_y
             ite1++;
+            ite21 += ite2;
         }
         for(i=0;i<size_x0;i++){
             w_idx=idx_x0[i];
             beta[m*dim+w_idx] = x0[w_idx];
         }
-        ite_cnt[m] = ite1;
+        ite_cnt_init[m] = ite0;
+        ite_cnt_ex[m] = ite1;
+        ite_cnt_in[m] = ite21;
     }
     //while (getchar() != '\n');
     free(x0);
@@ -467,11 +278,8 @@ void slim_sqrt_mfista(double *b, double *A, double *AA, double *beta, int *n, in
     free(u_x);
     free(u_y);
     free(u_z);
-    free(Ax0);
     free(bAx0);
-    free(Ay1);
     free(bAy1);
-    free(Az1);
     free(bAz1);
     free(g);
     free(idx_x0);

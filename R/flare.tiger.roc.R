@@ -4,8 +4,8 @@
 #         The ground truth is required                                              #
 # Author: Xingguo Li                                                                #
 # Email: <xingguo.leo@gmail.com>                                                    #
-# Date: July 29th 2012                                                              #
-# Version: 0.9.2                                                                    #
+# Date: Aug 25th, 2013                                                              #
+# Version: 1.0.0                                                                    #
 #-----------------------------------------------------------------------------------#
 
 flare.tiger.roc <- function(path, theta, verbose = TRUE){

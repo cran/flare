@@ -1,17 +1,20 @@
 #----------------------------------------------------------------------------------#
 # Package: flare                                                                   #
-# flare.slim.sqrt(): Regression with Square Root Lasso()                           #
+# flare.slim.dantzig.mfista(): Regression with Dantzig Lasso()                     #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
 # Date: Aug 25th, 2013                                                             #
 # Version: 1.0.0                                                                   #
 #----------------------------------------------------------------------------------#
 
-flare.slim.sqrt.mfista <- function(Y, X, lambda, nlambda, n, d, maxdf, mu, max.ite, prec,intercept,verbose)
+flare.slim.dantzig.mfista <- function(Y, X, lambda, nlambda, n, d, maxdf, mu, max.ite, prec,intercept,verbose)
 {
   if(verbose==TRUE)
-    cat("SQRT Lasso regression via MFISTA.\n")
+    cat("Dantzig Lasso regression via MFISTA.\n")
+  Y = t(X)%*%Y
+  X = t(X)%*%X
   XX = t(X)%*%X
+#   L = norm(XX,type="F")
   L = eigen(XX)$values[1]
   beta = array(0,dim=c(d,nlambda))
   ite.ext.init = rep(0,nlambda)
@@ -19,13 +22,14 @@ flare.slim.sqrt.mfista <- function(Y, X, lambda, nlambda, n, d, maxdf, mu, max.i
   ite.ext.in = rep(0,nlambda)
   if(intercept) intercept=1
   else intercept=0
-  str=.C("slim_sqrt_mfista", as.double(Y), as.double(X), 
+  begt=Sys.time()
+  str=.C("slim_dantzig_mfista", as.double(Y), as.double(X), 
          as.double(beta), as.integer(n), as.integer(d), as.double(mu),
          as.integer(ite.ext.init), as.integer(ite.ext.ex), 
          as.integer(ite.ext.in), as.double(lambda), as.integer(nlambda),
          as.integer(max.ite), as.double(prec), as.double(L), 
          as.integer(intercept),PACKAGE="flare")
-  
+  runt1=Sys.time()-begt
   beta.list = vector("list", nlambda)
   ite.ext.init = matrix(unlist(str[7]), byrow = FALSE, ncol = nlambda)
   ite.ext.ex = matrix(unlist(str[8]), byrow = FALSE, ncol = nlambda)
@@ -39,5 +43,5 @@ flare.slim.sqrt.mfista <- function(Y, X, lambda, nlambda, n, d, maxdf, mu, max.i
     beta.list[[i]] = beta.i
   }
   
-  return(list(beta=beta.list, ite=ite.ext))
+  return(list(beta=beta.list, ite=ite.ext, runt=runt1))
 }

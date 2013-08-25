@@ -1,11 +1,11 @@
 #----------------------------------------------------------------------------------#
 # Package: flare                                                                   #
-# flare.tiger.slasso.cdadm(): Scaled Lasso method for sparse precision matrix      #
+# flare.tiger.slasso.mfista(): Scaled Lasso method for sparse precision matrix      #
 #             estimation                                                           #
 # Authors: Xingguo Li                                                              #
 # Emails: <xingguo.leo@gmail.com>                                                  #
-# Date: Oct 15th, 2012                                                             #
-# Version: 0.9.6                                                                   #
+# Date: Aug 25th, 2013                                                             #
+# Version: 1.0.0                                                                   #
 #----------------------------------------------------------------------------------#
 
 

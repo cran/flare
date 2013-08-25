@@ -6,20 +6,20 @@
 flare: Family of Lasso Regression
 }
 \description{
-The package "flare" provides the implementation of a family of Lasso variants including Dantzig Selector, LAD Lasso, SQRT Lasso, Lq Lasso for estimating high dimensional sparse linear model. For Dantzig selector and Lq Lasso, we adopt the alternating direction method of multipliers (ADMM) and convert the original optimization problem into a sequential L1 penalized least square minimization problem, which can be efficiently solved by combining the linearization and the efficient coordinate descent algorithm. For LAD and SQRT Lasso, we adopt the combination of the dual smoothing and monotone fast iterative soft-thresholding algorithm (MFISTA). The computation is memory-optimized using the sparse matrix output. Besides the sparse linear model estimation, we also provide the extension of these Lasso variants to sparse Gaussian graphical model estimation including TIGER and CLIME (ADMM) using either L1 or adaptive L1 penalty.
+The package "flare" provides the implementation of a family of high-dimensional Lasso regression based machine learning toolkits, including a family of various Lasso regression and sparse Gaussian graphical model estimation. Lasso variants including Dantzig Selector, LAD Lasso, SQRT Lasso for estimating high dimensional sparse linear model. The sparse Gaussian graphical model estimation includes TIGER and CLIME using L1 penalty. We adopt the combination of the dual smoothing and monotone fast iterative soft-thresholding algorithm (MFISTA). The computation is memory-optimized using the sparse matrix output. 
 }
 \details{
 \tabular{ll}{
 Package: \tab flare\cr
 Type: \tab Package\cr
-Version: \tab 0.9.9\cr
-Date: \tab 2013-03-31\cr
+Version: \tab 1.0.0\cr
+Date: \tab 2013-08-25\cr
 License: \tab GPL-2\cr
 }
 }
 
 \author{
-Xingguo Li, Tuo Zhao, Lie Wang , Xiaoming Yuan and Han Liu \cr
+Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
 Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 }
 
