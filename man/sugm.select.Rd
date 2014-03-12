@@ -1,23 +1,23 @@
-\name{flare.tiger.select}
-\alias{flare.tiger.select}
+\name{sugm.select}
+\alias{sugm.select}
 
 \title{
-Model selection for high-dimensional undirected graph estimation
+Model selection for high-dimensional undirected graphical models
 }
 
 \description{
-Implements the regularization parameter selection for high dimensional undirected graph estimation. The optional approaches are stability approach to regularization selection (stars) and cross validation selection (cv).
+Implements the regularization parameter selection for high dimensional undirected graphical models. The optional approaches are stability approach to regularization selection (stars) and cross validation selection (cv).
 }
 
 \usage{
-flare.tiger.select(est, criterion = "stars", stars.subsample.ratio = 
-                   NULL, stars.thresh = 0.1,rep.num = 20, fold = 5, 
-                   loss="likelihood", verbose = TRUE)
+sugm.select(est, criterion = "stars", stars.subsample.ratio = NULL, 
+            stars.thresh = 0.1,rep.num = 20, fold = 5, 
+            loss="likelihood", verbose = TRUE)
 }
 
 \arguments{
   \item{est}{
-An object with S3 class \code{"flare.tiger"}
+An object with S3 class \code{"sugm"}
 }
   \item{criterion}{
 Model selection criterion. \code{"stars"} and \code{"cv"} are available for both graph estimation methods. The default value is \code{"stars"}.
@@ -77,7 +77,6 @@ The sparsity level of \code{"refit"}.
 }
 
 and anything else inluded in the input \code{est}
-
 }
 
 \note{
@@ -95,19 +94,22 @@ Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 }
 
 \seealso{
-\code{\link{flare.tiger}} and \code{\link{flare-package}}.
+\code{\link{sugm}} and \code{\link{flare-package}}.
 }
 
 \examples{
+## load package required
+library(igraph)
+
 #generate data
-L = flare.tiger.generator(d = 20, graph="hub")
-out1 = flare.tiger(L$data)
+L = sugm.generator(d = 10, graph="hub")
+out1 = sugm(L$data)
 
 #model selection using stars
-out1.select2 = flare.tiger.select(out1, criterion = "stars", stars.thresh = 0.05)
+out1.select2 = sugm.select(out1, criterion = "stars", stars.thresh = 0.05)
 plot(out1.select2)
 
 #model selection using cross validation
-out1.select3 = flare.tiger.select(out1, criterion = "cv")
+out1.select3 = sugm.select(out1, criterion = "cv")
 plot(out1.select3)
 }

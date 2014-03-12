@@ -1,7 +1,7 @@
 \name{print.select}
 \alias{print.select}
 \title{
-Print function for S3 class "select"
+Print Function for for an object with S3 class \code{"select"}
 }
 \description{
 Print the information about the model usage, graph dimension, model selection criterion, sparsity level of the optimal graph
@@ -11,11 +11,11 @@ Print the information about the model usage, graph dimension, model selection cr
 }
 \arguments{
   \item{x}{
-An object with S3 class \code{"select"}
-}
+  An object with S3 class \code{"select"}
+  }
   \item{\dots}{
-System reserved (No specific usage)
-}
+  Arguments to be passed to methods.
+  }
 }
 
 \author{
@@ -23,5 +23,5 @@ Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
 Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 }
 \seealso{
-\code{\link{flare.tiger.select}} and \code{\link{flare.tiger}}
+\code{\link{sugm.select}}, \code{\link{sugm}} and \code{\link{flare-package}}
 }

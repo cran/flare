@@ -2,7 +2,7 @@
 \alias{eyedata}
 
 \title{
-Gene expression data for Bardet-Biedl syndrome from Scheetz et al. (2006)
+The Bardet-Biedl syndrome Gene expression data from Scheetz et al. (2006)
 }
 
 \description{

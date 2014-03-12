@@ -1,14 +1,14 @@
-#-----------------------------------------------------------------------------------#
-# Package: flare                                                                    #
-# flare.tiger.roc(): Draw ROC Curve for a solution path                             #
-#         The ground truth is required                                              #
-# Author: Xingguo Li                                                                #
-# Email: <xingguo.leo@gmail.com>                                                    #
-# Date: Aug 25th, 2013                                                              #
-# Version: 1.0.0                                                                    #
-#-----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------#
+# Package: flare                                                                   #
+# sugm.roc(): Draw ROC Curve for a solution path                                   #
+#         The ground truth is required                                             #
+# Author: Xingguo Li                                                               #
+# Email: <xingguo.leo@gmail.com>                                                   #
+# Date: Dec 2nd 2013                                                               #
+# Version: 1.1.0                                                                   #
+#----------------------------------------------------------------------------------#
 
-flare.tiger.roc <- function(path, theta, verbose = TRUE){
+sugm.roc <- function(path, theta, verbose = TRUE){
   gcinfo(verbose = FALSE)	
   ROC = list()
   

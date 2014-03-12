@@ -1,7 +1,7 @@
 \name{plot.select}
 \alias{plot.select}
 \title{
-Plot function for S3 class "select"
+Plot Function for "select"
 }
 \description{
 Plot the optimal graph by model selection. 
@@ -23,5 +23,5 @@ Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
 Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 }
 \seealso{
-\code{\link{flare.tiger}} and \code{\link{flare.tiger.select}}
+\code{\link{sugm}} and \code{\link{sugm.select}}
 }

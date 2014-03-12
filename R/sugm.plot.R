@@ -1,13 +1,13 @@
 #-----------------------------------------------------------------------------------#
 # Package: flare                                                                    #
-# flare.tiger.plot(): graph visualization                                           #
+# sugm.plot(): graph visualization                                                  #
 # Author: Xingguo Li                                                                #
 # Email: <xingguo.leo@gmail.com>                                                    #
-# Date: Aug 25th, 2013                                                              #
-# Version: 1.0.0                                                                    #
+# Date: Dec 2nd 2013                                                                #
+# Version: 1.1.0                                                                    #
 #-----------------------------------------------------------------------------------#
 
-flare.plot <- function(G, epsflag = FALSE, graph.name = "default", cur.num = 1, location=NULL){
+sugm.plot <- function(G, epsflag = FALSE, graph.name = "default", cur.num = 1, location=NULL){
   gcinfo(FALSE)
   if(missing(location))	location = getwd()
   setwd(location)

@@ -1,7 +1,7 @@
 \name{plot.roc}
 \alias{plot.roc}
 \title{
-Plot function for S3 class "roc"
+Plot Function for "roc"
 }
 \description{
 Plot the ROC curve for an object with S3 class \code{"roc"}
@@ -23,5 +23,5 @@ Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
 Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 }
 \seealso{
-\code{\link{flare.tiger.roc}}
+\code{\link{sugm.roc}}, \code{\link{sugm}} and \code{\link{flare-package}}.
 }

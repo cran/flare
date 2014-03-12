@@ -1,31 +1,37 @@
 useDynLib("flare")
-import("MASS","igraph","Matrix","lattice")
-export("flare.tiger", 
-       "flare.tiger.generator",
-       "flare.tiger.clime.mfista",
-       "flare.tiger.slasso.mfista",
-       "flare.tiger.roc",
-       "flare.tiger.select",
-       "flare.slim",
-       "flare.slim.lad.mfista",
-       "flare.slim.sqrt.mfista",
-       "flare.slim.dantzig.mfista",
-       "flare.plot",
+import("MASS","Matrix","lattice")
+export("sugm", 
+       "sugm.generator",
+       "sugm.clime.ladm.scr",
+       "sugm.tiger.ladm.scr",
+       "sugm.roc",
+       "sugm.select",
+       "slim",
+       "slim.lad.ladm.scr.btr",
+       "slim.sqrt.ladm.scr",
+       "slim.dantzig.ladm.scr",
+       "slim.lq.ladm.scr.btr",
+       "slim.lasso.ladm.scr",
+       "sugm.plot",
        "print.slim",
-       "print.tiger",
+       "print.sugm",
        "print.select",
        "print.sim",
        "plot.slim",
-       "plot.tiger",
+       "plot.sugm",
        "plot.roc",
        "plot.select",
-       "plot.sim")
-S3method("print", "tiger")
+       "plot.sim",
+       "coef.slim",
+       "predict.slim")
+S3method("print", "sugm")
 S3method("print", "slim")
 S3method("print", "roc")
 S3method("print", "select")
 S3method("print", "sim")
-S3method("plot", "tiger")
+S3method("plot", "sugm")
 S3method("plot", "roc")
 S3method("plot", "select")
 S3method("plot", "sim")
+S3method("coef", "slim")
+S3method("predict", "slim")

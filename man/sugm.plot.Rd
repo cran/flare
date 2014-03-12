@@ -1,8 +1,8 @@
-\name{flare.plot}
-\alias{flare.plot}
+\name{sugm.plot}
+\alias{sugm.plot}
 
 \title{
-Graph visualization
+Graph visualization for an object with S3 class \code{"sugm"}
 }
 
 \description{
@@ -10,8 +10,8 @@ Implements the graph visualization using adjacency matrix. It can automatic orga
 }
 
 \usage{
-flare.plot(G, epsflag = FALSE, graph.name = "default", cur.num = 1, 
-           location)
+sugm.plot(G, epsflag = FALSE, graph.name = "default", cur.num = 1, 
+          location)
 }
 
 \arguments{
@@ -46,20 +46,23 @@ Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 }
 
 \examples{
+## load package required
+library(igraph)
+
 ## visualize the hub graph
-L = flare.tiger.generator(graph = "hub")
-flare.plot(L$theta)
+L = sugm.generator(graph = "hub")
+sugm.plot(L$theta)
 
 ## visualize the band graph
-L = flare.tiger.generator(graph = "band",g=5)
-flare.plot(L$theta)
+L = sugm.generator(graph = "band",g=5)
+sugm.plot(L$theta)
 
 ## visualize the cluster graph
-L = flare.tiger.generator(graph = "cluster")
-flare.plot(L$theta)
+L = sugm.generator(graph = "cluster")
+sugm.plot(L$theta)
 
 #show working directory
 getwd()
 #plot 5 graphs and save the plots as eps files in the working directory  
-flare.plot(L$theta, epsflag = TRUE, cur.num = 5)
+sugm.plot(L$theta, epsflag = TRUE, cur.num = 5)
 }

@@ -1,26 +1,26 @@
-\name{print.tiger}
-\alias{print.tiger}
+\name{print.sugm}
+\alias{print.sugm}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Print a flare.tiger Object
+Print Function for an object with S3 class \code{"sugm"}
 }
 \description{
-Print a summary of the information about the tiger object.
+Print a summary of the information about an object with S3 class \code{"slim"}.
 }
 \usage{
-\method{print}{tiger}(x, ...)
+\method{print}{sugm}(x, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-  The tiger object.
-}
+  An object with S3 class \code{"sugm"}.
+  }
   \item{\dots}{
-  Additional print options.
-}
+  Arguments to be passed to methods.
+  }
 }
 \details{
-This call simply outlines the options used for computing a tiger object.
+This call simply outlines the options used for computing a sugm object.
 }
 %\value{
 %}
@@ -37,5 +37,5 @@ Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{flare}} and \code{\link{flare-package}}.
+\code{\link{sugm}} and \code{\link{flare-package}}.
 }

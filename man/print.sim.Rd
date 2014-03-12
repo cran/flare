@@ -1,7 +1,7 @@
 \name{print.sim}
 \alias{print.sim}
 \title{
-Print function for S3 class "sim"
+Print Function for for an object with S3 class \code{"sim"}
 }
 \description{
 Print the information about the sample size, the dimension, the pattern and sparsity of the true graph structure.
@@ -11,16 +11,16 @@ Print the information about the sample size, the dimension, the pattern and spar
 }
 \arguments{
   \item{x}{
-An object with S3 class \code{"sim"}
-}
+  An object with S3 class \code{"sim"}.
+  }
   \item{\dots}{
-System reserved (No specific usage)
-}
+  Arguments to be passed to methods.
+  }
 }
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
 Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 }
 \seealso{
-\code{\link{flare.tiger}} and \code{\link{flare.tiger.generator}}
+\code{\link{sugm}} and \code{\link{sugm.generator}}
 }

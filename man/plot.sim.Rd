@@ -1,7 +1,7 @@
 \name{plot.sim}
 \alias{plot.sim}
 \title{
-Plot function for S3 class "sim"
+Plot Function for "sim"
 }
 \description{
 Visualize the covariance matrix, the empirical covariance matrix, the adjacency matrix and the graph pattern of the true graph structure.
@@ -11,11 +11,11 @@ Visualize the covariance matrix, the empirical covariance matrix, the adjacency 
 }
 \arguments{
   \item{x}{
-An object with S3 class \code{"sim"} 
-}
+  An object with S3 class \code{"sim"} 
+  }
   \item{\dots}{
-System reserved (No specific usage)
-}
+  Arguments to be passed to methods.
+  }
 }
 
 \author{
@@ -23,5 +23,5 @@ Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
 Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 }
 \seealso{
-\code{\link{flare.tiger}} and \code{\link{flare.tiger.generator}}
+\code{\link{sugm.generator}}, \code{\link{sugm}} and \code{\link{flare-package}}
 }

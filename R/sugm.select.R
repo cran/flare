@@ -1,26 +1,26 @@
 #----------------------------------------------------------------------------------#
 # Package: flare                                                                   #
-# flare.tiger.select(): Model selection using:                                     #
+# sugm.select(): Model selection using:                                            #
 #                     1.cross validation (cv)                                      #
 #                     2.stability approach to regularization selection (stars)     #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
-# Date: Aug 25th, 2013                                                             #
-# Version: 1.0.0                                                                   #
+# Date: Dec 2nd 2013                                                               #
+# Version: 1.1.0                                                                   #
 #----------------------------------------------------------------------------------#
 
 ## Main Function
-flare.tiger.select <- function(est, 
-                               criterion = "stars", 
-                               stars.subsample.ratio = NULL,
-                               stars.thresh = 0.1, 
-                               rep.num = 20,
-                               fold = 5,
-                               loss="likelihood", 
-                               verbose = TRUE)
+sugm.select <- function(est, 
+                        criterion = "stars", 
+                        stars.subsample.ratio = NULL,
+                        stars.thresh = 0.1, 
+                        rep.num = 20,
+                        fold = 5,
+                        loss="likelihood", 
+                        verbose = TRUE)
 {
-  if(est$method!="clime" && est$method!="slasso") {
-    cat("method must be either \"clime\" or \"slasso\"\n")
+  if(est$method!="clime" && est$method!="tiger") {
+    cat("\"method\" must be either \"clime\" or \"tiger\" \n")
     return(NULL)
   }
   gcinfo(FALSE)
@@ -46,9 +46,9 @@ flare.tiger.select <- function(est,
         flush.console()
       }
       
-      out = flare.tiger.cv(est, loss=loss, fold = fold)
-      est$opt.lambda = out$lambda_opt
-      est$opt.index = out$opt_idx
+      out = sugm.cv(est, loss=loss, fold = fold)
+      est$opt.lambda = out$lambda.opt
+      est$opt.index = out$opt.idx
       rm(out)
       gc()
       
@@ -64,11 +64,11 @@ flare.tiger.select <- function(est,
       }
       
       if(est$method == "clime")
-        out = flare.tiger(est$data, lambda = est$opt.lambda, method = "clime", sym = est$sym, verbose = FALSE,
-                    standardize=est$standardize,correlation=est$correlation)
-      else 
-        out = flare.tiger(est$data, lambda = est$opt.lambda, method = "slasso", sym = est$sym, verbose = FALSE,
-                    standardize=est$standardize,correlation=est$correlation)
+        out = sugm(est$data, lambda = est$opt.lambda, method = "clime", sym = est$sym, verbose = FALSE,
+                    standardize=est$standardize)
+      if(est$method == "tiger") 
+        out = sugm(est$data, lambda = est$opt.lambda, method = "tiger", sym = est$sym, verbose = FALSE,
+                    standardize=est$standardize)
       
       est$refit = est$path[[est$opt.index]]
       #est$refit[abs(est$icov[[est$opt.index]])<5e-2]=0
@@ -102,11 +102,11 @@ flare.tiger.select <- function(est,
         ind.sample = sample(c(1:n), floor(n*stars.subsample.ratio), replace=FALSE)
         
         if(est$method == "clime")
-          tmp = flare.tiger(est$data[ind.sample,], lambda = est$lambda, method = "clime", sym = est$sym, verbose = FALSE,
-                      standardize=est$standardize,correlation=est$correlation)$path
-        else 
-          tmp = flare.tiger(est$data[ind.sample,], lambda = est$lambda, method = "slasso", sym = est$sym, verbose = FALSE,
-                      standardize=est$standardize,correlation=est$correlation)$path
+          tmp = sugm(est$data[ind.sample,], lambda = est$lambda, method = "clime", sym = est$sym, verbose = FALSE,
+                      standardize=est$standardize)$path
+        if(est$method == "tiger")
+          tmp = sugm(est$data[ind.sample,], lambda = est$lambda, method = "tiger", sym = est$sym, verbose = FALSE,
+                     standardize=est$standardize)$path
         
         for(i in 1:nlambda)
           est$merge[[i]] = est$merge[[i]] + tmp[[i]]

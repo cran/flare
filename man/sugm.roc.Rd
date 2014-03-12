@@ -1,8 +1,8 @@
-\name{flare.tiger.roc}
-\alias{flare.tiger.roc}
+\name{sugm.roc}
+\alias{sugm.roc}
 
 \title{
-Draw ROC Curve for a graph path
+Draw ROC Curve for an object with S3 class \code{"sugm"}
 }
 
 \description{
@@ -10,7 +10,7 @@ Draws ROC curve for a graph path according to the true graph structure.
 }
 
 \usage{
-flare.tiger.roc(path, theta, verbose = TRUE)
+sugm.roc(path, theta, verbose = TRUE)
 }
 
 \arguments{
@@ -55,16 +55,19 @@ Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 }
 
 \seealso{
-\code{\link{flare.tiger}} and \code{\link{flare-package}}
+\code{\link{sugm}} and \code{\link{flare-package}}
 }
 
 \examples{
+## load package required
+library(igraph)
+
 #generate data
-L = flare.tiger.generator(d = 50, graph = "random", prob = 0.1)
-out1 = flare.tiger(L$data, lambda=10^(seq(log10(.4), log10(0.03), length.out=20)))
+L = sugm.generator(d = 30, graph = "random", prob = 0.1)
+out1 = sugm(L$data, lambda=10^(seq(log10(.4), log10(0.03), length.out=20)))
 
 #draw ROC curve
-Z1 = flare.tiger.roc(out1$path,L$theta)
+Z1 = sugm.roc(out1$path,L$theta)
 
 #Maximum F1 score
 max(Z1$F1)

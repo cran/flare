@@ -1,7 +1,7 @@
 \name{print.roc}
 \alias{print.roc}
 \title{
-Print function for S3 class "roc"
+Print Function for for an object with S3 class \code{"roc"}
 }
 \description{
 Print the information about true positive rates, false positive rates, the area under curve and maximum F1 score
@@ -11,11 +11,11 @@ Print the information about true positive rates, false positive rates, the area 
 }
 \arguments{
   \item{x}{
-An object with S3 class \code{"roc"}
-}
+  An object with S3 class \code{"roc"}
+  }
   \item{\dots}{
-System reserved (No specific usage)
-}
+  Arguments to be passed to methods.
+  }
 }
 
 \author{
@@ -23,5 +23,5 @@ Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
 Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 }
 \seealso{
-\code{\link{flare.tiger}} and \code{\link{flare.tiger.roc}}
+\code{\link{sugm.roc}}, \code{\link{sugm}} and \code{\link{flare-package}}
 }

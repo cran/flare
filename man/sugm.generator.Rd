@@ -1,8 +1,8 @@
-\name{flare.tiger.generator}
-\alias{flare.tiger.generator}
+\name{sugm.generator}
+\alias{sugm.generator}
 
 \title{
-Data generator for undirected graph estimation.
+Data generator for sparse undirected graph estimation.
 }
 
 \description{
@@ -10,8 +10,8 @@ Implements the data generation from multivariate normal distributions with diffe
 }
 
 \usage{
-flare.tiger.generator(n = 200, d = 50, graph = "random", v = NULL, u = NULL,
-            g = NULL, prob = NULL, seed = NULL, vis = FALSE, verbose = TRUE)
+sugm.generator(n = 200, d = 50, graph = "random", v = NULL, u = NULL,
+      g = NULL, prob = NULL, seed = NULL, vis = FALSE, verbose = TRUE)
 }
 
 \arguments{
@@ -88,22 +88,25 @@ Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 \code{\link{flare}} and \code{\link{flare-package}}
 }
 \examples{
+## load package required
+library(igraph)
+
 ## band graph with bandwidth 3
-L = flare.tiger.generator(graph = "band", g = 3)
+L = sugm.generator(graph = "band", g = 3)
 plot(L)
 
 ## random sparse graph
-L = flare.tiger.generator(vis = TRUE)
+L = sugm.generator(vis = TRUE)
 
 ## random dense graph
-L = flare.tiger.generator(prob = 0.5, vis = TRUE)
+L = sugm.generator(prob = 0.5, vis = TRUE)
 
 ## hub graph with 6 hubs
-L = flare.tiger.generator(graph = "hub", g = 6, vis = TRUE)
+L = sugm.generator(graph = "hub", g = 6, vis = TRUE)
 
 ## cluster graph with 8 clusters
-L = flare.tiger.generator(graph = "cluster", g = 8, vis = TRUE)
+L = sugm.generator(graph = "cluster", g = 8, vis = TRUE)
 
 ## scale-free graphs
-L = flare.tiger.generator(graph="scale-free", vis = TRUE)
+L = sugm.generator(graph="scale-free", vis = TRUE)
 }

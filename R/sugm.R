@@ -1,29 +1,31 @@
 #----------------------------------------------------------------------------------#
 # Package: flare                                                                   #
-# flare.tiger(): The user interface for tiger()                                    #
+# sugm(): The user interface for sugm()                                            #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
-# Date: Aug 25th, 2013                                                             #
-# Version: 1.0.0                                                                   #
+# Date: Dec 2nd 2013                                                               #
+# Version: 1.1.0                                                                   #
 #----------------------------------------------------------------------------------#
 
-flare.tiger <- function(data,
-                        lambda = NULL,
-                        nlambda = NULL,
-                        lambda.min.ratio = NULL,
-                        method = "slasso",
-                        sym = "or",
-                        shrink = NULL,
-                        prec = 1e-4,
-                        mu = 0.01,
-                        max.ite = 1e4,
-                        standardize = FALSE,
-                        correlation = FALSE,
-                        perturb = TRUE,
-                        verbose = TRUE)
+sugm <- function(data,
+                 lambda = NULL,
+                 nlambda = NULL,
+                 lambda.min.ratio = NULL,
+                 rho = NULL,
+                 method = "tiger",
+                 sym = "or",
+                 shrink = NULL,
+                 prec = 1e-4,
+                 max.ite = 1e4,
+                 standardize = FALSE,
+                 perturb = TRUE,
+                 verbose = TRUE)
 {
-  if(method!="clime" && method!="slasso") {
-    cat("\"method\" must be either \"clime\" or \"slasso\". \n")
+  if(verbose) {
+    cat("High-deimensional Sparse Undirected Graphical Models.\n")
+  }
+  if(method!="clime" && method!="tiger") {
+    cat("\"method\" must be either \"clime\" or \"tiger\" \n")
     return(NULL)
   }
   
@@ -37,48 +39,58 @@ flare.tiger <- function(data,
     if(verbose) {
       cat("The input is identified as the covriance matrix.\n")
     }
-    if(method=="slasso") {
-      cat("The input for \"slasso\" cannot be covriance matrix.\n")
+    if(method=="tiger") {
+      cat("The input for \"tiger\" cannot be covriance matrix.\n")
       return(NULL)
     }
-    if(correlation)
-      S = cov2cor(data)
-    else
-      S = data
+    if(standardize){
+      S0 = data
+      diag.cov=diag(S0)
+      diag.cov.invsq = diag(1/sqrt(diag.cov))
+      S = diag.cov.invsq%*%S0%*%diag.cov.invsq
+    }
+    else{
+      S0 = data
+      S = S0
+    }
   }
   if(!est$cov.input)
   {
-    if(standardize)
-      data = scale(data)
-    
-    if(correlation)
-      S = cor(data)
-    else
-      S = cov(data)
-    
-    if(!correlation)
-      S = S*(1-1/n)
+    X0=data
+    X1 = X0 - matrix(rep(colMeans(X0),n), nrow=n, byrow=TRUE)
+    S0 = crossprod(X1)/(n-1)
+    diag.cov=diag(S0)
+    diag.cov.invsq = diag(1/sqrt(diag.cov))
+    if(method=="tiger") {
+      data = X1%*%diag.cov.invsq
+      S = S0
+    }else{
+      if(standardize){
+        S = diag.cov.invsq%*%S0%*%diag.cov.invsq
+      }else{
+        S = S0
+      }
+    }
   }
   
   if(!is.null(lambda)) nlambda = length(lambda)
   if(is.null(lambda))
   {
-    if(method == "slasso") {
+    if(method == "tiger") {
       if(is.null(nlambda)){
-        nlambda = 10
+        nlambda = 5
       }
       if(is.null(lambda.min.ratio))
         lambda.min.ratio = 0.4
-      lambda.max= 2*sqrt(log(d)/n)
+      lambda.max= pi*sqrt(log(d)/n)
       lambda = seq(lambda.max,lambda.min.ratio*lambda.max,length=nlambda)
     }
     else {
       if(is.null(nlambda))
-        nlambda = 10
+        nlambda = 5
       if(is.null(lambda.min.ratio))
-        lambda.min.ratio = 0.1
-        lambda.max = max(diag(S))
-      #lambda.max = pi*sqrt(log(d)/n)
+        lambda.min.ratio = 0.4
+      lambda.max = min(max(S-diag(diag(S))),-min(S-diag(diag(S))))
       lambda.min = lambda.min.ratio*lambda.max
       lambda = exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
       rm(lambda.max,lambda.min,lambda.min.ratio)
@@ -89,45 +101,66 @@ flare.tiger <- function(data,
   est$lambda = lambda
   est$nlambda = nlambda
   
-  begt=Sys.time()
+  if(is.null(rho))
+    rho = 1
+  begt = Sys.time()
   if(method == "clime"){
     if (is.logical(perturb)) {
       if (perturb) { 
-        #eigvals = eigen(S, only.values=T)$values
-        #perturb = max(max(max(eigvals) - d*min(eigvals), 0)/(d-1), 1/n)
+#         eigvals = eigen(S, only.values=T)$values
+#         perturb = max(max(max(eigvals) - d*min(eigvals), 0)/(d-1), 1/n)
         perturb = 1/sqrt(n)
       } else {
         perturb = 0
       }
     }
     S = S + diag(d)*perturb
-    if(is.null(shrink)) shrink=0
-    re_tiger = flare.tiger.clime.mfista(S, d, maxdf, mu, lambda, shrink, prec, max.ite)
-  }
-  
-  if(method == "slasso"){
-    if(is.null(shrink)) shrink=0
-    lambda = lambda*sqrt(n)
-    re_tiger = flare.tiger.slasso.mfista(data, n, d, maxdf, mu, lambda, shrink, prec, max.ite)
-  }
-  runt=Sys.time()-begt
-  est$runtime = runt
-  est$ite = re_tiger$ite
-  
-  for(j in 1:d) {
-    if(re_tiger$col_cnz[j+1]>re_tiger$col_cnz[j])
-    {
-      idx.tmp = (re_tiger$col_cnz[j]+1):re_tiger$col_cnz[j+1]
-      ord = order(re_tiger$row_idx[idx.tmp])
-      re_tiger$row_idx[idx.tmp] = re_tiger$row_idx[ord + re_tiger$col_cnz[j]]
-      re_tiger$x[idx.tmp] = re_tiger$x[ord + re_tiger$col_cnz[j]]
+    if(method == "clime"){
+      if(is.null(shrink)) shrink = 0#1.5
+      if(is.null(max.ite)) max.ite=1e4
+      re.sugm = sugm.clime.ladm.scr(S, lambda, nlambda, n, d, maxdf, rho, shrink, prec, max.ite)
+      
+      if(standardize){
+        for(i in 1:nlambda){
+          re.sugm$icov1[[i]] = diag.cov.invsq%*%re.sugm$icov1[[i]]%*%diag.cov.invsq
+          icov.i = re.sugm$icov1[[i]]
+          re.sugm$icov[[i]] = icov.i*(abs(icov.i)<=abs(t(icov.i)))+t(icov.i)*(abs(t(icov.i))<abs(icov.i))
+        }
+      }else{
+        for(i in 1:nlambda){
+          icov.i = re.sugm$icov1[[i]]
+          re.sugm$icov[[i]] = icov.i*(abs(icov.i)<=abs(t(icov.i)))+t(icov.i)*(abs(t(icov.i))<abs(icov.i))
+        }
+      }
     }
   }
-  G = new("dgCMatrix", Dim = as.integer(c(d*nlambda,d)), x = as.vector(re_tiger$x[1:re_tiger$col_cnz[d+1]]),
-          p = as.integer(re_tiger$col_cnz), i = as.integer(re_tiger$row_idx[1:re_tiger$col_cnz[d+1]]))
-  est$x=re_tiger$x
-  est$row_idx=re_tiger$row_idx
-  est$col_cnz=re_tiger$col_cnz
+  
+  if(method == "tiger"){
+    if(is.null(shrink)) shrink=0
+    if(is.null(max.ite)) max.ite=1e4
+    re.sugm = sugm.tiger.ladm.scr(data, n, d, maxdf, rho, lambda, shrink, prec, max.ite)
+    
+    for(i in 1:nlambda){
+      re.sugm$icov1[[i]] = diag.cov.invsq%*%re.sugm$icov1[[i]]%*%diag.cov.invsq
+      icov.i = re.sugm$icov1[[i]]
+      re.sugm$icov[[i]] = icov.i*(abs(icov.i)<=abs(t(icov.i)))+t(icov.i)*(abs(t(icov.i))<abs(icov.i))
+    }
+  }
+  est$ite = re.sugm$ite
+  runt = Sys.time()-begt
+  
+  for(j in 1:d) {
+    if(re.sugm$col.cnz[j+1]>re.sugm$col.cnz[j])
+    {
+      idx.tmp = (re.sugm$col.cnz[j]+1):re.sugm$col.cnz[j+1]
+      ord = order(re.sugm$row.idx[idx.tmp])
+      re.sugm$row.idx[idx.tmp] = re.sugm$row.idx[ord + re.sugm$col.cnz[j]]
+      re.sugm$x[idx.tmp] = re.sugm$x[ord + re.sugm$col.cnz[j]]
+    }
+  }
+  G = new("dgCMatrix", Dim = as.integer(c(d*nlambda,d)), x = as.vector(re.sugm$x[1:re.sugm$col.cnz[d+1]]),
+          p = as.integer(re.sugm$col.cnz), i = as.integer(re.sugm$row.idx[1:re.sugm$col.cnz[d+1]]))
+  
   est$beta = list()
   est$path = list()
   est$df = matrix(0,d,nlambda)
@@ -145,23 +178,23 @@ flare.tiger <- function(data,
     est$sparsity[i] = sum(est$path[[i]])/d/(d-1)
   }
   rm(G)
-  est$icov = re_tiger$icov
-  est$icov1 = re_tiger$icov1
-  est$sigma = S
+  est$runtime = runt
+  est$icov = re.sugm$icov
+  est$icov1 = re.sugm$icov1
+  est$sigma = S0
   est$data = data
   est$method = method
   est$sym = sym
   est$verbose = verbose
   est$standardize = standardize
-  est$correlation = correlation
   est$perturb = perturb
-  class(est) = "tiger"
+  class(est) = "sugm"
   return(est)
 }
 
-print.tiger <- function(x, ...)
+print.sugm <- function(x, ...)
 {  
-  cat("\n flare.tiger options summary: \n")
+  cat("\n sugm options summary: \n")
   cat(x$nlambda, " lambdas used:\n")
   print(signif(x$lambda,digits=3))
   cat("Method=", x$method, "\n")
@@ -170,7 +203,7 @@ print.tiger <- function(x, ...)
   cat("Sparsity level:",min(x$sparsity),"----->",max(x$sparsity),"\n")
 }
 
-plot.tiger = function(x, align = FALSE, ...){
+plot.sugm = function(x, align = FALSE, ...){
   gcinfo(FALSE)
   
   if(x$nlambda == 1)	par(mfrow = c(1, 2), pty = "s", omi=c(0.3,0.3,0.3,0.3), mai = c(0.3,0.3,0.3,0.3))

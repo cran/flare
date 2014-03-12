@@ -2,10 +2,10 @@
 \alias{print.slim}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Print a flare.slim Object
+Print Function for an object with S3 class \code{"slim"}
 }
 \description{
-Print a summary of the information about the slim object.
+Print a summary of the information about an object with S3 class \code{"slim"}.
 }
 \usage{
 \method{print}{slim}(x, ...)
@@ -13,11 +13,11 @@ Print a summary of the information about the slim object.
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-  The slim object.
-}
+  An object with S3 class \code{"slim"}.
+  }
   \item{\dots}{
-  Additional print options.
-}
+  Arguments to be passed to methods.
+  }
 }
 \details{
 This call simply outlines the options used for computing a slim object.
@@ -37,5 +37,5 @@ Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{flare.slim}} and \code{\link{flare-package}}.
+\code{\link{slim}} and \code{\link{flare-package}}.
 }
