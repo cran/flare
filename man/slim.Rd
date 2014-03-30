@@ -6,7 +6,7 @@ Sparse Linear Regression using Nonsmooth Loss Functions and L1 Regularization
 }
 
 \description{
-The function "slim" implements a family of Lasso variants for estimating high dimensional sparse linear models including Dantzig Selector, LAD Lasso, SQRT Lasso, Lq Lasso for estimating high dimensional sparse linear model. We adopt the alternating direction method of multipliers (ADMM) and convert the original optimization problem into a sequential L1-penalized least square minimization problem, which can be efficiently solved by combining the linearization and multi-stage screening of varialbes. 
+The function "slim" implements a family of Lasso variants for estimating high dimensional sparse linear models including Dantzig Selector, LAD Lasso, SQRT Lasso, Lq Lasso for estimating high dimensional sparse linear model. We adopt the alternating direction method of multipliers (ADMM) and convert the original optimization problem into a sequential L1-penalized least square minimization problem, which can be efficiently solved by combining the linearization and multi-stage screening of varialbes. Missing values can be tolerated for Dantzig selector in the design matrix and response vector. 
 }
 
 \usage{

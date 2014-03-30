@@ -39,6 +39,10 @@ sugm <- function(data,
     if(verbose) {
       cat("The input is identified as the covriance matrix.\n")
     }
+    if(sum(is.na(data))>0){
+      cat("The input has missing values for covariance/correlation input.\n")
+      return(NULL)
+    }
     if(method=="tiger") {
       cat("The input for \"tiger\" cannot be covriance matrix.\n")
       return(NULL)
@@ -57,6 +61,10 @@ sugm <- function(data,
   if(!est$cov.input)
   {
     X0=data
+    if(method=="tiger" && sum(is.na(X0))>0){
+      cat("The input for \"tiger\" has missing values.\n")
+      return(NULL)
+    }
     X1 = X0 - matrix(rep(colMeans(X0),n), nrow=n, byrow=TRUE)
     S0 = crossprod(X1)/(n-1)
     diag.cov=diag(S0)
@@ -66,9 +74,13 @@ sugm <- function(data,
       S = S0
     }else{
       if(standardize){
-        S = diag.cov.invsq%*%S0%*%diag.cov.invsq
+#         S = diag.cov.invsq%*%S0%*%diag.cov.invsq
+        S = cor(X0,use="pairwise.complete.obs")
+        diag.cov=diag(S)
+        diag.cov.invsq = diag(1/sqrt(diag.cov))
       }else{
-        S = S0
+#         S = S0
+        S = cov(X0,use="pairwise.complete.obs")
       }
     }
   }

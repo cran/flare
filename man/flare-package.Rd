@@ -6,14 +6,14 @@
 flare: a new Family of Lasso Regression
 }
 \description{
-The package "flare" provides the implementation of a family of novel regression methods (Lasso, Dantzig Selector, LAD Lasso, SQRT Lasso, Lq Lasso) and their extensions to sparse precision matrix estimation (TIGER and CLIME using L1) in high dimensions. We adopt the alternating direction method of multipliers and convert the original optimization problem into a sequence of L1-penalized least square minimization problems with the linearization method and multi-stage screening of variables. The computation is memory-optimized using the sparse matrix output. In addition, we also provide several convenient regularization parameter selection and visulaization tools.
+The package "flare" provides the implementation of a family of novel regression methods (Lasso, Dantzig Selector, LAD Lasso, SQRT Lasso, Lq Lasso) and their extensions to sparse precision matrix estimation (TIGER and CLIME using L1) in high dimensions. We adopt the alternating direction method of multipliers and convert the original optimization problem into a sequence of L1-penalized least square minimization problems with the linearization method and multi-stage screening of variables. Missing values can be tolerated for Dantzig selector in the design matrix and response vector, and CLIME in the data matrix. The computation is memory-optimized using the sparse matrix output. In addition, we also provide several convenient regularization parameter selection and visulaization tools.
 }
 \details{
 \tabular{ll}{
 Package: \tab flare\cr
 Type: \tab Package\cr
-Version: \tab 1.1.0\cr
-Date: \tab 2014-03-05\cr
+Version: \tab 1.2.0\cr
+Date: \tab 2014-03-30\cr
 License: \tab GPL-2\cr
 }
 }

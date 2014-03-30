@@ -3,8 +3,8 @@
 # flare.slim(): The user interface for slim()                                      #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
-# Date: Dec 2nd 2013                                                               #
-# Version: 1.1.0                                                                   #
+# Date: Mar 16th 2014                                                              #
+# Version: 1.2.0                                                                   #
 #----------------------------------------------------------------------------------#
 
 slim <- function(X, 
@@ -21,7 +21,6 @@ slim <- function(X,
                  max.ite = 1e5,
                  verbose = TRUE)
 {
-  intercept = T
   if(method!="dantzig" && method!="lq" && method!="lasso"){
     cat("\"method\" must be dantzig, lasso or lq.\n")
     return(NULL)
@@ -35,8 +34,33 @@ slim <- function(X,
   if(verbose) {
     cat("Sparse Linear Regression with L1 Regularization.\n")
   }
+  if(sum(is.na(X))>0 || sum(is.na(Y))>0){
+    cat("The input has missing values.\n")
+    Xrow.na = rowSums(is.na(X))
+    nXrow.na = sum(Xrow.na)
+    Xidx.na = which(Xrow.na>0)
+    Y.na = as.numeric(is.na(Y))
+    nY.na = sum(Y.na)
+    Yidx.na = which(Y.na>0)
+    idx.na = unique(c(Xidx.na,Yidx.na))
+    X = X[-idx.na,]
+    Y = as.matrix(Y[-idx.na,],ncol=1)
+    n = nrow(X)
+    if(n==0) {
+      cat("Too many missing values.\n")
+      return(NULL)
+    }
+  }
+  if(is.null(X)||is.null(Y)) {
+    cat("No data input.\n")
+    return(NULL)
+  }
   n = nrow(X)
   d = ncol(X)
+  if(n==0 || d==0) {
+    cat("No data input.\n")
+    return(NULL)
+  }
   maxdf = max(n,d)
   xm=matrix(rep(colMeans(X),n),nrow=n,ncol=d,byrow=T)
   x1=X-xm
@@ -51,8 +75,7 @@ slim <- function(X,
     sdy = 1
     yy = y1
   }
-#   Y.norm = sqrt(sum(Y^2))
-#   Y1 = Y*sqrt(n-1)/Y.norm
+  intercept = FALSE
   
   if(intercept){
     xx = cbind(rep(1, nrow(xx)), xx)
@@ -151,7 +174,7 @@ slim <- function(X,
     for(i in 1:nlambda)
       df[i] = sum(out$beta[[i]]!=0)
   }
-
+  
   est = list()
   intcpt0=matrix(0,nrow=1,ncol=nlambda)
   intcpt=matrix(0,nrow=1,ncol=nlambda)
@@ -159,20 +182,20 @@ slim <- function(X,
     beta1=matrix(0,nrow=d-1,ncol=nlambda)
     for(k in 1:nlambda){
       tmp.beta = out$beta[[k]][2:d]
-      intcpt[k] = ym-(xm[1,]*sdxinv)%*%tmp.beta*sdy+out$beta[[k]][1]*sdy
-      intcpt0[k]=intcpt[k]
       beta1[,k]=sdxinv*tmp.beta*sdy
+      intcpt[k] = ym-as.numeric(xm[1,]%*%beta1[,k])+out$beta[[k]][1]*sdy
+      intcpt0[k] = intcpt[k]
     }
   }else{
     beta1=matrix(0,nrow=d,ncol=nlambda)
     for(k in 1:nlambda){
       tmp.beta = out$beta[[k]]
-      intcpt[k] = 0
-      intcpt0[k] = ym-(xm[1,]*sdxinv)%*%tmp.beta*sdy
+      intcpt0[k] = 0
       beta1[,k] = sdxinv*tmp.beta*sdy
+      intcpt[k] = ym-as.numeric(xm[1,]%*%beta1[,k])
     }
   }
-
+  
   est$beta0 = out$beta
   est$beta = beta1
   est$intercept = intcpt
@@ -188,30 +211,32 @@ slim <- function(X,
   est$verbose = verbose
   est$runtime = runt
   class(est) = "slim"
+  if(verbose) print(est)
   return(est)
 }
 
 print.slim <- function(x, ...)
 {  
-  cat("\n slim options summary: \n")
-  cat(x$nlambda, " lambdas used:\n")
+  cat("\n")
+  cat("slim options summary: \n")
+  cat(x$nlambda, "lambdas used:\n")
   print(signif(x$lambda,digits=3))
-  cat("Method=", x$method, "\n")
+  cat("Method =", x$method, "\n")
   if(x$method=="lq"){
     if(x$q==1){
-      cat("q=",x$q," loss, LAD Lasso\n")
+      cat("q =",x$q," loss, LAD Lasso\n")
     } else {
       if(x$q==2)
-        cat("q=",x$q," loss, SQRT Lasso\n")
+        cat("q =",x$q,"loss, SQRT Lasso\n")
       else
-        cat("q=",x$q," loss\n")
+        cat("q =",x$q,"loss\n")
     }
   }
   cat("Degree of freedom:",min(x$df),"----->",max(x$df),"\n")
   if(units.difftime(x$runtime)=="secs") unit="secs"
   if(units.difftime(x$runtime)=="mins") unit="mins"
   if(units.difftime(x$runtime)=="hours") unit="hours"
-  cat("Runtime:",x$runtime," ",unit,"\n")
+  cat("Runtime:",x$runtime,unit,"\n")
 }
 
 plot.slim <- function(x, ...)

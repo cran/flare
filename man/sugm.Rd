@@ -6,7 +6,7 @@ High-deimensional Sparse Undirected Graphical Models.
 }
 
 \description{
-The function "sugm" estimates sparse undirected graphical models, i.e. Gaussian precision matrix, in high dimensions. We adopt two estimation procedures based on column by column regression scheme: (1) Tuning-Insensitive Graph Estimation and Regression based on square root Lasso (tiger); (2) The Constrained L1 Minimization for Sparse Precision Matrix Estimation using either L1 penalty (clime). The optimization algorithm for all three methods are implemented based on the alternating direction method of multipliers (ADMM) with the linearization method and multi-stage screening of variables. The computation is memory-optimized using the sparse matrix output.
+The function "sugm" estimates sparse undirected graphical models, i.e. Gaussian precision matrix, in high dimensions. We adopt two estimation procedures based on column by column regression scheme: (1) Tuning-Insensitive Graph Estimation and Regression based on square root Lasso (tiger); (2) The Constrained L1 Minimization for Sparse Precision Matrix Estimation using either L1 penalty (clime). The optimization algorithm for all three methods are implemented based on the alternating direction method of multipliers (ADMM) with the linearization method and multi-stage screening of variables. Missing values can be tolerated for CLIME in the data matrix. The computation is memory-optimized using the sparse matrix output.
 }
 
 \usage{
