@@ -21,11 +21,21 @@ slim.lasso.ladm.scr <- function(Y, X, lambda, nlambda, n, d, maxdf, max.ite, pre
     intcep=0
   }
   if(d>n){
-    num.scr1 = ceiling(n/log(n))
-    num.scr2 = n-1
+    if(n<=3){
+      num.scr1 = n
+      num.scr2 = n
+    }else{
+      num.scr1 = ceiling(n/log(n))
+      num.scr2 = n-1
+    }
   }else{
-    num.scr1 = ceiling(sqrt(d))
-    num.scr2 = ceiling(d/log(d))
+    if(d<=3){
+      num.scr1 = d
+      num.scr2 = d
+    }else{
+      num.scr1 = ceiling(sqrt(d))
+      num.scr2 = ceiling(d/log(d))
+    }
   }
   order0 = order(XY,decreasing = TRUE)
   idx.scr = order0; num.scr = length(idx.scr)

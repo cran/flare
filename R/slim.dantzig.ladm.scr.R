@@ -10,7 +10,6 @@
 slim.dantzig.ladm.scr <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept)
 {
   cat("Dantzig selector.\n")
-#   begt = Sys.time()
   XY = crossprod(X,Y/n)
   XX = crossprod(X,X/n)#+0.05*lambda[nlambda]*diag(d)
   beta = matrix(0,nrow=d,ncol=nlambda)
@@ -22,8 +21,15 @@ slim.dantzig.ladm.scr <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.i
   }else{
     intcep=0
   }
-  num.scr1 = ceiling(n/log(n))
-  num.scr2 = n-1
+  
+  if(n<=3){
+    num.scr1 = n
+    num.scr2 = n
+  }else{
+    num.scr1 = ceiling(n/log(n))
+    num.scr2 = n-1
+  }
+
   order0 = order(XY,decreasing = TRUE)
   idx.scr = order0; num.scr = length(idx.scr)
   idx.scr1 = order0[1:num.scr1]
@@ -31,8 +37,6 @@ slim.dantzig.ladm.scr <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.i
   X1 = X[,idx.scr]
   XXX = crossprod(X1,crossprod(tcrossprod(X1,X1),X1))/(n^2)
   gamma = max(colSums(abs(XXX)))
-#   cat(" ",Sys.time() - begt," ")
-#   begt = Sys.time()
   str=.C("slim_dantzig_ladm_scr", as.double(XY), as.double(XX), as.double(XXX), 
          as.double(beta), as.integer(n), as.integer(d), as.double(rho),
          as.integer(ite.int), as.integer(ite.int1), as.integer(ite.int2), 
@@ -41,7 +45,6 @@ slim.dantzig.ladm.scr <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.i
          as.double(gamma), as.double(lambda), 
          as.integer(nlambda), as.integer(max.ite), as.double(prec), 
          as.integer(intcep),PACKAGE="flare")
-#   cat(" ",Sys.time() - begt," ")
   beta.list = vector("list", nlambda)
   for(i in 1:nlambda){
     beta.i = unlist(str[4])[((i-1)*d+1):(i*d)]

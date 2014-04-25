@@ -28,9 +28,18 @@ sugm <- function(data,
     cat("\"method\" must be either \"clime\" or \"tiger\" \n")
     return(NULL)
   }
-  
   n = nrow(data)
   d = ncol(data)
+  if(method == "tiger" && d<3){
+    cat("d>=3 is required for \"tiger\" \n")
+    cat("More on help(sugm) \n")
+    return(NULL)
+  }
+  if(method == "clime" && d<2){
+    cat("d>=2 is required for \"clime\" \n")
+    cat("More on help(sugm) \n")
+    return(NULL)
+  }
   maxdf = max(n,d)
   est = list()
   est$cov.input = isSymmetric(data)
@@ -102,7 +111,12 @@ sugm <- function(data,
         nlambda = 5
       if(is.null(lambda.min.ratio))
         lambda.min.ratio = 0.4
-      lambda.max = min(max(S-diag(diag(S))),-min(S-diag(diag(S))))
+      lambda.max.tmp1 = min(max(S-diag(diag(S))),-min(S-diag(diag(S))))
+      lambda.max.tmp2 = max(max(S-diag(diag(S))),-min(S-diag(diag(S))))
+      if(lambda.max.tmp1==0)
+        lambda.max = lambda.max.tmp2
+      else
+        lambda.max = lambda.max.tmp1
       lambda.min = lambda.min.ratio*lambda.max
       lambda = exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
       rm(lambda.max,lambda.min,lambda.min.ratio)
@@ -150,6 +164,7 @@ sugm <- function(data,
   if(method == "tiger"){
     if(is.null(shrink)) shrink=0
     if(is.null(max.ite)) max.ite=1e4
+    
     re.sugm = sugm.tiger.ladm.scr(data, n, d, maxdf, rho, lambda, shrink, prec, max.ite)
     
     for(i in 1:nlambda){

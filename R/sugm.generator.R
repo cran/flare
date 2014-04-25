@@ -11,8 +11,27 @@
 sugm.generator <- function(n = 200, d = 50, graph = "random", v = NULL, u = NULL, g = NULL, 
                             prob = NULL, seed = NULL, vis = FALSE, verbose = TRUE){	
   gcinfo(FALSE)
-  if(verbose) cat("Generating data from the multivariate normal distribution with the", graph,"graph structure....")
+  if(verbose) cat("Generating data from the multivariate normal distribution with the", graph,"graph structure...\n")
   
+  if(graph!="random" && graph!="hub" && graph!="cluster" && graph!="band" && graph!="scale-free"){
+    cat("\"graph\" must be one of \"random\", \"hub\", \"cluster\", \"band\" and \"scale-free\" \n")
+    cat("More on help(sugm.generator) \n")
+    return(NULL)
+  }
+  if(graph=="hub"||graph=="cluster"){
+    if(d<4){
+      cat("d is too small, d>=4 required for",graph,"\n")
+      cat("More on help(sugm.generator) \n")
+      return(NULL)
+    }
+  }
+  if(graph=="random"||graph=="band"||graph=="scale-free"){
+    if(d<3){
+      cat("d is too small, d>=3 required for",graph,"\n")
+      cat("More on help(sugm.generator) \n")
+      return(NULL)
+    }
+  }
   if(is.null(seed)) seed = 1
   set.seed(seed)
   if(is.null(g)){

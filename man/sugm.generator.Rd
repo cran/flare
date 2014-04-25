@@ -16,25 +16,25 @@ sugm.generator(n = 200, d = 50, graph = "random", v = NULL, u = NULL,
 
 \arguments{
   \item{n}{
-The number of observations (sample size). The default value is \code{200}.
+The number of observations (sample size). The default value is \eqn{200}.
 }
   \item{d}{
-The number of variables (dimension). The default value is \code{50}.
+The number of variables (dimension). For \code{"hub"} and \code{"cluster"}, \code{d}\eqn{ \ge }4 is required. For \code{"random"}, \code{"band"} and \code{"scale-free"}, \code{d}\eqn{ \ge }3 is required. The default value is \eqn{50}.
 }
   \item{graph}{
 The graph structure with 5 options: \code{"random"}, \code{"hub"}, \code{"cluster"}, \code{"band"}, and \code{"scale-free"}.
 }
   \item{v}{
-The off-diagonal elements of the precision matrix, controlling the magnitude of partial correlations with \code{u}. The default value is \code{0.3}.
+The off-diagonal elements of the precision matrix, controlling the magnitude of partial correlations with \code{u}. The default value is 0.3.
 }
   \item{u}{
-A positive number being added to the diagonal elements of the precision matrix, to control the magnitude of partial correlations. The default value is \code{0.1}.
+A positive number being added to the diagonal elements of the precision matrix, to control the magnitude of partial correlations. The default value is 0.1.
 }
   \item{g}{
-For \code{"cluster"} or \code{"hub"} graph, \code{g} is the number of hubs or clusters in the graph. The default value is about \code{d/20} if \code{d >= 40} and \code{2} if \code{d < 40}. For \code{"band"} graph, \code{g} is the bandwidth and the default value is \code{1}. NOT applicable to \code{"random"} graph.
+For \code{"cluster"} or \code{"hub"} graph, \code{g} is the number of hubs or clusters in the graph. The default value is about \code{d}/20 if \code{d}\eqn{ \ge} 40 and 2 if \code{d}\eqn{ <} 40. For \code{"band"} graph, \code{g} is the bandwidth and the default value is \eqn{1}. NOT applicable to \code{"random"} graph.
 }
   \item{prob}{
-For \code{"random"} graph, it is the probability that a pair of nodes has an edge. The default value is \code{3/d}. For \code{"cluster"} graph, it is the probability that a pair of nodes has an edge in each cluster. The default value is \code{6*g/d} if \code{d/g <= 30} and \code{0.3} if \code{d/g > 30}. NOT applicable to \code{"hub"}, \code{"band"}, and \code{scale-free} graphs.
+For \code{"random"} graph, it is the probability that a pair of nodes has an edge. The default value is 3/\code{d}. For \code{"cluster"} graph, it is the probability that a pair of nodes has an edge in each cluster. The default value is 6\eqn{*}\code{g/d} if \code{d/g}\eqn{ \le} 30 and 0.3 if \code{d/g}\eqn{ >} 30. NOT applicable to \code{"hub"}, \code{"band"}, and \code{"scale-free"} graphs.
 }
   \item{seed}{
 Set seed for data generation. The default value is 1.

@@ -15,12 +15,22 @@ sugm.clime.ladm.scr <- function(Sigma, lambda, nlambda, n, d, maxdf, rho, shrink
   lambda = lambda-shrink*prec
   idx.scr = apply(Sigma,2,order,decreasing=TRUE)
   num.scr = d
-  if(d>n){
-    num.scr1 = ceiling(n/log(n))
-    num.scr2 = n-1
+  if(d>=n){
+    if(n<=3){
+      num.scr1 = n
+      num.scr2 = n
+    }else{
+      num.scr1 = ceiling(n/log(n))
+      num.scr2 = n-1
+    }
   }else{
-    num.scr1 = ceiling(sqrt(d))
-    num.scr2 = ceiling(d/log(d))
+    if(d<=3){
+      num.scr1 = d
+      num.scr2 = d
+    }else{
+      num.scr1 = ceiling(sqrt(d))
+      num.scr2 = ceiling(d/log(d))
+    }
   }
   ite.int = matrix(0,nrow=d,ncol=nlambda)
   ite.int1 = matrix(0,nrow=d,ncol=nlambda)

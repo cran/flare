@@ -12,7 +12,6 @@ slim.dantzig.ladm.scr2 <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.
   cat("Dantzig selector.\n")
   XY = crossprod(X,Y)/n
   XX = crossprod(X)/n#+0.05*lambda[nlambda]*diag(d)
-  #   gamma = (eigen(XX)$values[1])^2
   beta = matrix(0,nrow=d,ncol=nlambda)
   ite.int = rep(0,nlambda)
   ite.int1 = rep(0,nlambda)
@@ -21,7 +20,11 @@ slim.dantzig.ladm.scr2 <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.
   }else{
     intcep=0
   }
-  num.scr1 = ceiling(d/log(d))
+  if(d<=3){
+    num.scr1 = d
+  }else{
+    num.scr1 = ceiling(d/log(d))
+  }
   order0 = order(XY,decreasing = TRUE)
   idx.scr = order0; num.scr = length(idx.scr)
   idx.scr1 = order0[1:num.scr1]

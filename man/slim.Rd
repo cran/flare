@@ -18,15 +18,15 @@ slim(X, Y, lambda = NULL, nlambda = NULL,
 
 \arguments{
   \item{Y}{The \eqn{n}-dimensional response vector.}
-  \item{X}{The \eqn{n} by \eqn{d} design matrix.}
-  \item{lambda}{A sequence of decresing positive numbers to control the regularization. Typical usage is to leave the input \code{lambda = NULL} and have the program compute its own \code{lambda} sequence based on \code{nlambda} and \code{lambda.min.ratio}. Users can also specify a sequence to override this. Default value is from \eqn{lambda.max} to \code{lambda.min.ratio*lambda.max}. For Lq regression, the default value of \eqn{lambda.max} is \eqn{\pi\sqrt{\log(d)/n}}. For Dantzig selector, the default value of \eqn{lambda.max} is the minimum regularization parameter, which yields an all-zero estiamtes.}
+  \item{X}{The \eqn{n} by \eqn{d} design matrix. \code{d}\eqn{ \ge }2 is required.}
+  \item{lambda}{A sequence of decresing positive numbers to control the regularization. Typical usage is to leave the input \code{lambda = NULL} and have the program compute its own \code{lambda} sequence based on \code{nlambda} and \code{lambda.min.ratio}. Users can also specify a sequence to override this. Default value is from \code{lambda.max} to \code{lambda.min.ratio*lambda.max}. For Lq regression, the default value of \code{lambda.max} is \eqn{\pi\sqrt{\log(d)/n}}. For Dantzig selector, the default value of \code{lambda.max} is the minimum regularization parameter, which yields an all-zero estiamtes.}
   \item{nlambda}{The number of values used in \code{lambda}. Default value is 5.}
-  \item{lambda.min.value}{The smallest value for \code{lambda}, as a fraction of the uppperbound (\code{MAX}) of the regularization parameter. The program can automatically generate \code{lambda} as a sequence of length = \code{nlambda} starting from \code{MAX} to \code{lambda.min.ratio*MAX} in log scale. The default value is \eqn{\log(d)/n} for for Dantzig selector \code{0.3*MAX} for Lq Lasso.}
-  \item{lambda.min.ratio}{The smallest ratio of the value for \code{lambda}. The default value is \code{0.3} for Lq Lasso and \code{0.5} for Dantzig selector.}
+  \item{lambda.min.value}{The smallest value for \code{lambda}, as a fraction of the uppperbound (\code{lambda.max}) of the regularization parameter. The program can automatically generate \code{lambda} as a sequence of length = \code{nlambda} starting from \code{lambda.max} to \code{lambda.min.ratio*lambda.max} in log scale. The default value is \eqn{\log(d)/n} for for Dantzig selector 0.3\code{*lambda.max} for Lq Lasso.}
+  \item{lambda.min.ratio}{The smallest ratio of the value for \code{lambda}. The default value is 0.3 for Lq Lasso and 0.5 for Dantzig selector.}
   \item{rho}{The penalty parameter used in \code{ADMM}. The default value is \eqn{\sqrt{d}}.}
   \item{method}{Dantzig selector is applied if \code{method = "dantzig"} and \eqn{L_q} Lasso is applied if \code{method = "lq"}. Standard Lasso is provided if \code{method = "lasso"}. The default value is \code{"lq"}.}
   \item{res.sd}{Flag of whether the response varialbles are standardized. The default value is \code{FALSE}.}
-  \item{q}{The loss function used in Lq Lasso. It is only applicable when \code{method = "lq"} and must be in \eqn{[1,2]}. The default value is 2.}
+  \item{q}{The loss function used in Lq Lasso. It is only applicable when \code{method = "lq"} and must be in [1,2]. The default value is 2.}
   \item{prec}{Stopping criterion. The default value is 1e-5.}
   \item{max.ite}{The iteration limit. The default value is 1e5.}
   \item{verbose}{Tracing information printing is disabled if \code{verbose = FALSE}. The default value is \code{TRUE}.}
@@ -104,11 +104,11 @@ nlamb = 5
 ratio = 0.3
 
 ## Regression with "dantzig", general "lq" and "lasso" respectively
-out1=slim(X=X,Y=Y,nlambda=nlamb,lambda.min.ratio=ratio,method = "dantzig")
-out2=slim(X=X,Y=Y,nlambda=nlamb,lambda.min.ratio=ratio,method = "lq",q=1)
-out3=slim(X=X,Y=Y,nlambda=nlamb,lambda.min.ratio=ratio,method = "lq",q=1.5)
-out4=slim(X=X,Y=Y,nlambda=nlamb,lambda.min.ratio=ratio,method = "lq",q=2)
-out5=slim(X=X,Y=Y,nlambda=nlamb,lambda.min.ratio=ratio,method = "lasso")
+out1 = slim(X=X,Y=Y,nlambda=nlamb,lambda.min.ratio=ratio,method="dantzig")
+out2 = slim(X=X,Y=Y,nlambda=nlamb,lambda.min.ratio=ratio,method="lq",q=1)
+out3 = slim(X=X,Y=Y,nlambda=nlamb,lambda.min.ratio=ratio,method="lq",q=1.5)
+out4 = slim(X=X,Y=Y,nlambda=nlamb,lambda.min.ratio=ratio,method="lq",q=2)
+out5 = slim(X=X,Y=Y,nlambda=nlamb,lambda.min.ratio=ratio,method="lasso")
 
 ## Display results
 print(out4)

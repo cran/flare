@@ -20,11 +20,21 @@ sugm.tiger.ladm.scr <- function(data, n, d, maxdf, rho, lambda, shrink, prec, ma
   d1 = d-1
   num.scr = d1
   if(d1>=n){
-    num.scr1 = ceiling(n/log(n))
-    num.scr2 = n-1
+    if(n<=3){
+      num.scr1 = n
+      num.scr2 = n
+    }else{
+      num.scr1 = ceiling(n/log(n))
+      num.scr2 = n-1
+    }
   }else{
-    num.scr1 = ceiling(sqrt(d1))
-    num.scr2 = ceiling(d1/log(d1))
+    if(d1<=3){
+      num.scr1 = d1
+      num.scr2 = d1
+    }else{
+      num.scr1 = ceiling(sqrt(d1))
+      num.scr2 = ceiling(d1/log(d1))
+    }
   }
   ite.int = matrix(0,nrow=d,ncol=nlambda)
   ite.int1 = matrix(0,nrow=d,ncol=nlambda)
