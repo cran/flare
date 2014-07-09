@@ -3,13 +3,14 @@
 # slim.sqrt.ladm.scr(): Regression with sqrt lasso()                               #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
-# Date: Mar 2nd, 2014                                                              #
-# Version: 1.1.0                                                                   #
+# Date: Jul 8th, 2014                                                              #
+# Version: 1.4.0                                                                   #
 #----------------------------------------------------------------------------------#
 
-slim.sqrt.ladm.scr <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept)
+slim.sqrt.ladm.scr <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept, verbose)
 {
-  cat("Square root Lasso with screening.\n")
+  if(verbose==TRUE)
+    cat("Square root Lasso with screening.\n")
   XY = crossprod(X,Y)
   beta = matrix(0,nrow=d,ncol=nlambda)
   ite.int = rep(0,nlambda)

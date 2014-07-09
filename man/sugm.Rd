@@ -106,7 +106,7 @@ Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 library(igraph)
 
 ## generating data
-n = 100
+n = 50
 d = 100
 D = sugm.generator(n=n,d=d,graph="band",g=1)
 plot(D)

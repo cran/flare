@@ -133,8 +133,8 @@ sugm <- function(data,
   if(method == "clime"){
     if (is.logical(perturb)) {
       if (perturb) { 
-#         eigvals = eigen(S, only.values=T)$values
-#         perturb = max(max(max(eigvals) - d*min(eigvals), 0)/(d-1), 1/n)
+        #eigvals = eigen(S, only.values=T)$values
+        #perturb = max(max(max(eigvals) - d*min(eigvals), 0)/(d-1), 1/n)
         perturb = 1/sqrt(n)
       } else {
         perturb = 0
@@ -144,7 +144,7 @@ sugm <- function(data,
     if(method == "clime"){
       if(is.null(shrink)) shrink = 0#1.5
       if(is.null(max.ite)) max.ite=1e4
-      re.sugm = sugm.clime.ladm.scr(S, lambda, nlambda, n, d, maxdf, rho, shrink, prec, max.ite)
+      re.sugm = sugm.clime.ladm.scr(S, lambda, nlambda, n, d, maxdf, rho, shrink, prec, max.ite, verbose)
       
       if(standardize){
         for(i in 1:nlambda){
@@ -165,7 +165,7 @@ sugm <- function(data,
     if(is.null(shrink)) shrink=0
     if(is.null(max.ite)) max.ite=1e4
     
-    re.sugm = sugm.tiger.ladm.scr(data, n, d, maxdf, rho, lambda, shrink, prec, max.ite)
+    re.sugm = sugm.tiger.ladm.scr(data, n, d, maxdf, rho, lambda, shrink, prec, max.ite, verbose)
     
     for(i in 1:nlambda){
       re.sugm$icov1[[i]] = diag.cov.invsq%*%re.sugm$icov1[[i]]%*%diag.cov.invsq
@@ -190,8 +190,7 @@ sugm <- function(data,
   
   est$beta = list()
   est$path = list()
-  est$df = matrix(0,d,nlambda)
-  est$rss = matrix(0,d,nlambda)  
+  est$df = matrix(0,d,nlambda)  
   est$sparsity = rep(0,nlambda)  
   for(i in 1:nlambda) {
     est$beta[[i]] = G[((i-1)*d+1):(i*d),]
@@ -208,6 +207,7 @@ sugm <- function(data,
   est$runtime = runt
   est$icov = re.sugm$icov
   est$icov1 = re.sugm$icov1
+  est$sigma2 = S
   est$sigma = S0
   est$data = data
   est$method = method
@@ -216,6 +216,7 @@ sugm <- function(data,
   est$standardize = standardize
   est$perturb = perturb
   class(est) = "sugm"
+  gc()
   return(est)
 }
 

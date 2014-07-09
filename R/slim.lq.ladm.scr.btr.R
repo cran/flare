@@ -3,13 +3,14 @@
 # slim.lq.ladm.scr(): Regression with lq lasso()                                   #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
-# Date: Mar 3rd, 2014                                                              #
-# Version: 1.1.0                                                                   #
+# Date: Jul 8th, 2014                                                              #
+# Version: 1.4.0                                                                   #
 #----------------------------------------------------------------------------------#
 
-slim.lq.ladm.scr.btr <- function(Y, X, q, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept)
+slim.lq.ladm.scr.btr <- function(Y, X, q, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept, verbose)
 {
-  cat("LQ norm regrelarized regression (q =", q, ") .\n")
+  if(verbose==TRUE)
+    cat("LQ norm regrelarized regression (q =", q, ")  with screening.\n")
   XY = crossprod(X,Y)
   beta = matrix(0,nrow=d,ncol=nlambda)
   ite.int = rep(0,nlambda)

@@ -20,13 +20,20 @@ sugm.likelihood(Sigma, Omega)
 sugm.tracel2(Sigma, Omega)
 sugm.cv(obj, loss=c("likelihood", "tracel2"), fold=5)
 part.cv(n, fold)
-sugm.clime.ladm.scr(Sigma, lambda, nlambda, n, d, maxdf, rho, shrink, prec, max.ite)
-sugm.tiger.ladm.scr(data, n, d, maxdf, rho, lambda, shrink, prec, max.ite)
-slim.lad.ladm.scr.btr(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept)
-slim.sqrt.ladm.scr(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept)
-slim.dantzig.ladm.scr(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept)
-slim.lq.ladm.scr.btr(Y, X, q, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept)
-slim.lasso.ladm.scr(Y, X, lambda, nlambda, n, d, maxdf, max.ite, prec, intercept)
+sugm.clime.ladm.scr(Sigma, lambda, nlambda, n, d, maxdf, rho, shrink, prec, 
+                    max.ite, verbose)
+sugm.tiger.ladm.scr(data, n, d, maxdf, rho, lambda, shrink, prec, 
+                    max.ite, verbose)
+slim.lad.ladm.scr.btr(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, 
+                      intercept, verbose)
+slim.sqrt.ladm.scr(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, 
+                   intercept, verbose)
+slim.dantzig.ladm.scr(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, 
+                      intercept, verbose)
+slim.lq.ladm.scr.btr(Y, X, q, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, 
+                     intercept, verbose)
+slim.lasso.ladm.scr(Y, X, lambda, nlambda, n, d, maxdf, max.ite, prec, 
+                    intercept, verbose)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -49,6 +56,7 @@ slim.lasso.ladm.scr(Y, X, lambda, nlambda, n, d, maxdf, max.ite, prec, intercept
   \item{X}{Design matrix in linear regression. }
   \item{q}{The vector norm used for the loss term. }
   \item{intercept}{The indicator of whether including intercepts specifically. }
+  \item{verbose}{Tracing information printing is disabled if \code{verbose = FALSE}. The default value is \code{TRUE}.}
 }
 \details{
   These are not intended for use by users.   

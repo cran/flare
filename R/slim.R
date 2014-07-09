@@ -15,8 +15,8 @@ slim <- function(X,
                  lambda.min.ratio = NULL,
                  rho = 1,
                  method="lq",
-                 res.sd = FALSE,
                  q = 2,
+                 res.sd = FALSE,
                  prec = 1e-5,
                  max.ite = 1e5,
                  verbose = TRUE)
@@ -149,21 +149,21 @@ slim <- function(X,
   begt=Sys.time()
   if(method=="dantzig"){ # dantzig
     if(d>=n)
-      out = slim.dantzig.ladm.scr(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept)
+      out = slim.dantzig.ladm.scr(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept, verbose)
     else
-      out = slim.dantzig.ladm.scr2(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept)
+      out = slim.dantzig.ladm.scr2(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept, verbose)
     q = "infty"
   }
   if(method=="lq") {#  && q!=2 && q!="lasso"
     if(q==1) # lad lasso
-      out = slim.lad.ladm.scr.btr(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept)
+      out = slim.lad.ladm.scr.btr(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept, verbose)
     if(q==2) # sqrt lasso
-      out = slim.sqrt.ladm.scr(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept)
+      out = slim.sqrt.ladm.scr(yy, xx, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept, verbose)
     if(q>1 && q<2) # lq lasso
-      out = slim.lq.ladm.scr.btr(yy, xx, q, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept)
+      out = slim.lq.ladm.scr.btr(yy, xx, q, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept, verbose)
   }
   if(method=="lasso")
-    out = slim.lasso.ladm.scr(yy, xx, lambda, nlambda, n, d, maxdf, max.ite, prec, intercept)
+    out = slim.lasso.ladm.scr(yy, xx, lambda, nlambda, n, d, maxdf, max.ite, prec, intercept, verbose)
   runt=Sys.time()-begt
   
   df=rep(0,nlambda)

@@ -5,13 +5,14 @@
 #                                                                                  #
 # Authors: Xingguo Li                                                              #
 # Emails: <xingguo.leo@gmail.com>                                                  #
-# Date: Mar 5th 2014                                                               #
-# Version: 1.1.0                                                                   #
+# Date: Jul 8th, 2014                                                              #
+# Version: 1.4.0                                                                   #
 #----------------------------------------------------------------------------------#
 
-sugm.tiger.ladm.scr <- function(data, n, d, maxdf, rho, lambda, shrink, prec, max.ite){
+sugm.tiger.ladm.scr <- function(data, n, d, maxdf, rho, lambda, shrink, prec, max.ite, verbose){
   
-  cat("Tuning-Insensitive Graph Estimation and Regression.\n")
+  if(verbose==TRUE)
+    cat("Tuning-Insensitive Graph Estimation and Regression.\n")
   Z = data
   rm(data)
   ZZ = crossprod(Z)

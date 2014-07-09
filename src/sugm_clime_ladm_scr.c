@@ -149,7 +149,7 @@ void sugm_clime_ladm_scr(double *X0, double *XX, double *beta, double *x0, int *
         ite_int2[m] = ite2;
     }
     *col_cnz0 = cnz;
-    if(idx==dim-1)
+    //if(idx==dim-1)
         //printf("C time0=%f,time1=%f,time2=%f,time3=%f \n",((double)(time0))/CLOCKS_PER_SEC,((double)(time1))/CLOCKS_PER_SEC,((double)(time2))/CLOCKS_PER_SEC,((double)(time3))/CLOCKS_PER_SEC);
     free(beta0);
     free(alp);

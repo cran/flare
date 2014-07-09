@@ -298,61 +298,11 @@ void sugm_tiger_ladm_scr(double *Y0, double *X0, double *XY0, double *XX, double
         ite_int1[m] = ite1;
         ite_int2[m] = ite2;
         
-        //num_scr1_tmp = num_scr1;
-        //num_scr2_tmp = num_scr2;
-        //for(k=0;k<dim;k++){
-        //    if(beta0[k]!=0){
-        //        for(j=0; j<num_scr1; j++) {
-        //            if(idx_scr1[j] == k) break;
-        //        }
-        //        if(j==num_scr1){
-        //            idx_scr1[num_scr1] = k;
-        //            num_scr1++;
-        //        }
-        //
-        //        for(j=0; j<num_scr2; j++) {
-        //            if(idx_scr2[j] == k) break;
-        //        }
-        //        if(j==num_scr2){
-        //            idx_scr2[num_scr2] = k;
-        //            num_scr2++;
-        //        }
-        //    }
-        //}
-        //if(num_scr1>num_scr1_tmp){
-        //    flag1=1;
-            //    printf("after, flag1=%d,num_scr1=%d \n",flag1,num_scr1);
-        //}
-        //else{
-        //    flag1 = 0;
-            //    printf("after, flag1=%d,num_scr1=%d \n",flag1,num_scr1);
-        //}
-        //if(num_scr2>num_scr2_tmp){
-        //    flag2=1;
-            //    printf("after, flag2=%d,num_scr2=%d  \n",flag2,num_scr2);
-        //}
-        //else{
-        //    flag2 = 0;
-            //    printf("after, flag2=%d,num_scr2=%d  \n",flag2,num_scr2);
-        //}
-        //flag = 0;
-        
         tau0=0;
         for(j=0;j<ndata;j++)
             tau0 += alp[j]*alp[j];
         tau0 = sqrt(tau0/ndata);
-        //printf("idx=%d,m=%d,tau=%f\n",idx,m,tau0);
-        //ilambda = lambda[m]*ndata;
-        //tiger_lasso_ladm_scr(Y0,XY0,XY1,X0,X1,XX,XX1,idx_scr1,num_scr1,ndata,dim,beta0,&T1,rho,&ite1,ilambda,max_ite1,eps1,flag1,m,&tau0);
-        //printf("idx=%d,m=%d,tau=%f,ite1=%d,beta=%f \n",idx,m,tau0,ite1,beta0[0]);
-        //tiger_lasso_ladm_scr(Y0,XY0,XY2,X0,X2,XX,XX2,idx_scr2,num_scr2,ndata,dim,beta0,&T2,rho,&ite2,ilambda,max_ite2,eps2,flag2,m,&tau0);
-        //printf("idx=%d,m=%d,tau=%f,ite2=%d,beta=%f \n",idx,m,tau0,ite2,beta0[0]);
-        //tiger_lasso_ladm_scr(Y0,XY0,XY,X0,X,XX,XX,idx_scr,num_scr,ndata,dim,beta0,&T,rho,&ite,ilambda,max_ite0,eps,flag,m,&tau0);
-        //printf("idx=%d,m=%d,tau=%f,ite=%d,beta=%f \n",idx,m,tau0,ite,beta0[0]);
         
-        //ite_int3[m] = ite;
-        //ite_int4[m] = ite1;
-        //ite_int5[m] = ite2;
         
         num_scr1_tmp = num_scr1;
         num_scr2_tmp = num_scr2;

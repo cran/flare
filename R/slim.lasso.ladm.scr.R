@@ -3,13 +3,14 @@
 # slim.lasso.ladm.scr(): Regression with Lasso()                                   #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
-# Date: Mar 3rd, 2014                                                              #
-# Version: 1.1.0                                                                   #
+# Date: Jul 8th, 2014                                                              #
+# Version: 1.4.0                                                                   #
 #----------------------------------------------------------------------------------#
 
-slim.lasso.ladm.scr <- function(Y, X, lambda, nlambda, n, d, maxdf, max.ite, prec, intercept)
+slim.lasso.ladm.scr <- function(Y, X, lambda, nlambda, n, d, maxdf, max.ite, prec, intercept, verbose)
 {
-  cat("Lasso with screening.\n")
+  if(verbose==TRUE)
+    cat("Lasso with screening.\n")
   XY = crossprod(X,Y)
   beta = matrix(0,nrow=d,ncol=nlambda)
   ite.int = rep(0,nlambda)

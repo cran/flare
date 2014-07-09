@@ -4,13 +4,14 @@
 #                        estimation                                                #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
-# Date: Mar 1st 2014                                                               #
-# Version: 1.1.0                                                                   #
+# Date: Jul 8th, 2014                                                              #
+# Version: 1.4.0                                                                   #
 #----------------------------------------------------------------------------------#
 
-sugm.clime.ladm.scr <- function(Sigma, lambda, nlambda, n, d, maxdf, rho, shrink, prec, max.ite){
+sugm.clime.ladm.scr <- function(Sigma, lambda, nlambda, n, d, maxdf, rho, shrink, prec, max.ite, verbose){
   
-  cat("The Constrained L1 Minimization for Sparse Precision Matrix Estimation.\n")
+  if(verbose==TRUE)
+    cat("The Constrained L1 Minimization for Sparse Precision Matrix Estimation.\n")
   d.sq = d^2
   lambda = lambda-shrink*prec
   idx.scr = apply(Sigma,2,order,decreasing=TRUE)
@@ -74,11 +75,14 @@ sugm.clime.ladm.scr <- function(Sigma, lambda, nlambda, n, d, maxdf, rho, shrink
     ite.int[j,] = unlist(str[12])
     ite.int1[j,] = unlist(str[13])
     ite.int2[j,] = unlist(str[14])
+    for(i in 1:nlambda){
+      cat('d=',j,',ite=',ite.int[j,i],',ite1=',ite.int1[j,i],',ite2=',ite.int2[j,i],'\n')
+    }
   }
   icov.list = vector("list", nlambda)
   for(i in 1:nlambda){
     icov.i = icov.list1[[i]]
-#     icov.list[[i]] = icov.i*(abs(icov.i)<=abs(t(icov.i)))+t(icov.i)*(abs(t(icov.i))<abs(icov.i))
+    icov.list[[i]] = icov.i*(abs(icov.i)<=abs(t(icov.i)))+t(icov.i)*(abs(t(icov.i))<abs(icov.i))
   }
   ite = list()
   ite[[1]] = ite.int1

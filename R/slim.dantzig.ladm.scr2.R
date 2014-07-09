@@ -3,13 +3,14 @@
 # slim.dantzig.ladm.scr2(): Regression with Dantzig()                              #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
-# Date: Feb 28th, 2014                                                             #
-# Version: 1.1.0                                                                   #
+# Date: Jul 8th, 2014                                                              #
+# Version: 1.4.0                                                                   #
 #----------------------------------------------------------------------------------#
 
-slim.dantzig.ladm.scr2 <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept)
+slim.dantzig.ladm.scr2 <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite, prec, intercept, verbose)
 {
-  cat("Dantzig selector.\n")
+  if(verbose==TRUE)
+    cat("Dantzig selector with screening.\n")
   XY = crossprod(X,Y)/n
   XX = crossprod(X)/n#+0.05*lambda[nlambda]*diag(d)
   beta = matrix(0,nrow=d,ncol=nlambda)
@@ -25,7 +26,7 @@ slim.dantzig.ladm.scr2 <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.
   }else{
     num.scr1 = ceiling(d/log(d))
   }
-  order0 = order(XY,decreasing = TRUE)
+  order0 = order(abs(XY),decreasing = TRUE)
   idx.scr = order0; num.scr = length(idx.scr)
   idx.scr1 = order0[1:num.scr1]
   XX1 = XX[idx.scr,idx.scr]

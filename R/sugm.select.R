@@ -42,7 +42,7 @@ sugm.select <- function(est,
     if(criterion == "cv"){
       if(verbose)
       {
-        cat("Conducting cross validation (cv) selection....")
+        cat("Conducting cross validation (cv) selection....\n")
         flush.console()
       }
       
@@ -59,7 +59,7 @@ sugm.select <- function(est,
       
       if(verbose)
       {
-        cat("Computing the optimal graph....")
+        cat("Computing the optimal graph....\n")
         flush.console()
       }
       
@@ -116,7 +116,8 @@ sugm.select <- function(est,
       }
       
       if(verbose){
-        mes = "Conducting Subsampling....done.                 "
+        cat("\n")
+        mes = "Conducting Subsampling....done. "
         cat(mes, "\r")
         cat("\n")
         flush.console()
@@ -148,7 +149,8 @@ sugm.select <- function(est,
 print.select = function(x, ...)
 {
   if(x$cov.input){
-    cat("Model selection is not available when using the covariance matrix as input.")
+    cat("Model selection is not available when using the covariance matrix as input.\n")
+    return(NULL)
   }
   if(!x$cov.input)
   {
@@ -167,7 +169,8 @@ print.select = function(x, ...)
 
 plot.select = function(x, ...){
   if(x$cov.input){
-    cat("Model selection is not available when using the covariance matrix as input.")
+    cat("Model selection is not available when using the covariance matrix as input.\n")
+    return(NULL)
   }
   if(!x$cov.input)
   {

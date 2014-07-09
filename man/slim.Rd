@@ -12,7 +12,7 @@ The function "slim" implements a family of Lasso variants for estimating high di
 \usage{
 slim(X, Y, lambda = NULL, nlambda = NULL, 
      lambda.min.value = NULL,lambda.min.ratio = NULL, 
-     rho = 1, method="lq", res.sd = FALSE, q = 2, 
+     rho = 1, method="lq", q = 2, res.sd = FALSE, 
      prec = 1e-5, max.ite = 1e5, verbose = TRUE)
 }
 
@@ -25,8 +25,8 @@ slim(X, Y, lambda = NULL, nlambda = NULL,
   \item{lambda.min.ratio}{The smallest ratio of the value for \code{lambda}. The default value is 0.3 for Lq Lasso and 0.5 for Dantzig selector.}
   \item{rho}{The penalty parameter used in \code{ADMM}. The default value is \eqn{\sqrt{d}}.}
   \item{method}{Dantzig selector is applied if \code{method = "dantzig"} and \eqn{L_q} Lasso is applied if \code{method = "lq"}. Standard Lasso is provided if \code{method = "lasso"}. The default value is \code{"lq"}.}
-  \item{res.sd}{Flag of whether the response varialbles are standardized. The default value is \code{FALSE}.}
   \item{q}{The loss function used in Lq Lasso. It is only applicable when \code{method = "lq"} and must be in [1,2]. The default value is 2.}
+  \item{res.sd}{Flag of whether the response varialbles are standardized. The default value is \code{FALSE}.}
   \item{prec}{Stopping criterion. The default value is 1e-5.}
   \item{max.ite}{The iteration limit. The default value is 1e5.}
   \item{verbose}{Tracing information printing is disabled if \code{verbose = FALSE}. The default value is \code{TRUE}.}
