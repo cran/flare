@@ -1,5 +1,5 @@
 useDynLib("flare")
-import("MASS","Matrix","lattice")
+import("MASS","Matrix","lattice","igraph")
 export("sugm", 
        "sugm.generator",
        "sugm.clime.ladm.scr",

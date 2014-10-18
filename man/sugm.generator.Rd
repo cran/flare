@@ -89,7 +89,7 @@ Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 }
 \examples{
 ## load package required
-library(igraph)
+library(flare)
 
 ## band graph with bandwidth 3
 L = sugm.generator(graph = "band", g = 3)

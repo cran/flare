@@ -8,10 +8,10 @@
 
 void tiger_lasso_ladm_scr(double *Y0, double *XY0, double *Xy, double *X0, double *X, double *XX0, double *XX, int *idx_scr, int num_scr, int ndata, int dim, double *beta, double *T, double rho, int *ite, double lambda, int max_ite, double prec, int flag, int nlamb, double *tau)
 {
-    int j,k,m,w_idx,size_a,size_a1,size_a_pre,gap_track,ite2;
-    double gap_ext,max_dif,alp_dif,beta_dif,mu_dif,threshold,tmpd,alp_abs,alp_tmp,T0,ratio,epsT,Q,Q0,F,tau0,tau1,tmp;
+    int j,k,m,w_idx,size_a,size_a1,size_a_pre;
+    double gap_ext,max_dif,beta_dif,threshold,tmpd,ratio,epsT,tau0,tau1,tmp;
     int * idx_tmp;
-    char c;
+    //char c;
     
     tau0 = *tau;
     //start = clock();
@@ -200,9 +200,9 @@ void tiger_lasso_ladm_scr(double *Y0, double *XY0, double *Xy, double *X0, doubl
 void sugm_tiger_ladm_scr(double *Y0, double *X0, double *XY0, double *XX, double *beta, double *x0, int *d, int *n, double * gamma, double * lambda, int * nnlambda, double *rho0, int *col_cnz0, int * row_idx0, int *ite_int, int *ite_int1, int *ite_int2, int *ite_int3, int *ite_int4, int *ite_int5, int *num_scr_1, int *num_scr_2, int *idx_scr, int * idx_scr_1, int * idx_scr_2, int *max_ite, double *prec, int * idx0)
 
 {
-    int j,k,m,ndata,dim,dim0,nlambda,ite1,ite2,ite3,ite,max_ite0,max_ite1,max_ite2,num_scr,num_scr1,num_scr2,num_scr1_tmp,num_scr2_tmp,flag,flag1,flag2,intercept;
+    int j,k,m,ndata,dim,dim0,nlambda,ite1,ite2,ite,max_ite0,max_ite1,max_ite2,num_scr,num_scr1,num_scr2,num_scr1_tmp,num_scr2_tmp,flag,flag1,flag2,intercept;
     int idx,y_col,cnz,mdim0;
-    double T,T1,T2,rho,zero,eps,eps1,eps2,ilambda,sqrtn,nrholamb,tau0,tau1;
+    double T,T1,T2,rho,zero,eps,eps1,eps2,ilambda,sqrtn,nrholamb,tau0;
     
     //time0 = 0;
     //time1 = 0;

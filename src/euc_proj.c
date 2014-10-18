@@ -197,7 +197,7 @@ double mod_bisec2(double * v, double z, int n){
 
 void euc_proj(double * v, double z, int n){
     int i;
-    double lambda, runt;
+    double lambda;
 
     lambda = mod_bisec2(v, z, n);
     for(i=0; i<n; i++)

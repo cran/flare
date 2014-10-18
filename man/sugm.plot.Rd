@@ -47,7 +47,7 @@ Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 
 \examples{
 ## load package required
-library(igraph)
+library(flare)
 
 ## visualize the hub graph
 L = sugm.generator(graph = "hub")

@@ -75,9 +75,6 @@ sugm.clime.ladm.scr <- function(Sigma, lambda, nlambda, n, d, maxdf, rho, shrink
     ite.int[j,] = unlist(str[12])
     ite.int1[j,] = unlist(str[13])
     ite.int2[j,] = unlist(str[14])
-    for(i in 1:nlambda){
-      cat('d=',j,',ite=',ite.int[j,i],',ite1=',ite.int1[j,i],',ite2=',ite.int2[j,i],'\n')
-    }
   }
   icov.list = vector("list", nlambda)
   for(i in 1:nlambda){

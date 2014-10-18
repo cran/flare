@@ -10,7 +10,7 @@
 void lq_ladm_scr_btr(double *Y0, double *X0, double *X, double *XX0, double *XX, int *idx_scr, int num_scr, int ndata, int dim, double *alp, double *beta, double * mu, double *T, double rho, int *ite, double lambda, int max_ite, double prec, int intercept, int flag, int nlamb, double nrholamb, double q)
 {
     int j,k,m,w_idx,size_a,size_a1,size_a_pre,gap_track,ite2;
-    double gap_ext,max_dif,alp_dif,beta_dif,mu_dif,threshold,tmpd,alp_abs,alp_tmp,T0,ratio,epsT,Q,Q0,F,cc;
+    double gap_ext,max_dif,alp_dif,beta_dif,mu_dif,threshold,tmpd,T0,ratio,epsT,Q,Q0,F,cc;
     int * idx_tmp;
     
     

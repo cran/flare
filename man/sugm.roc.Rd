@@ -60,7 +60,7 @@ Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 
 \examples{
 ## load package required
-library(igraph)
+library(flare)
 
 #generate data
 L = sugm.generator(d = 30, graph = "random", prob = 0.1)

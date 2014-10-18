@@ -103,11 +103,11 @@ Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 \examples{
 
 ## load package required
-library(igraph)
+library(flare)
 
 ## generating data
 n = 50
-d = 100
+d = 50
 D = sugm.generator(n=n,d=d,graph="band",g=1)
 plot(D)
 
@@ -119,5 +119,5 @@ sugm.plot(out1$path[[4]])
 ## sparse precision matrix estimation with method "tiger"
 out2 = sugm(D$data, method = "tiger")
 plot(out2)
-sugm.plot(out2$path[[4]])
+sugm.plot(out2$path[[5]])
 }

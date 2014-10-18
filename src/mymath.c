@@ -81,7 +81,7 @@ double l2norm(double * x, int * xa_idx, int n){
 
 // ||x-y||_2^2;
 double dif_vec_l2norm(double * x, double * y, int n){
-    int i,b_idx;
+    int i;
     double tmp,sum;
 
     sum=0;
@@ -108,7 +108,7 @@ double dif_vec_l2norm_as(double * x, double * y, int * xa_idx, int n){
 
 // <x,y-z>;
 double inner_prod2(double * x, double * y, double * z, int n){
-    int i,b_idx;
+    int i;
     double tmp=0;
 
     for(i=0; i<n; i++) {
@@ -343,7 +343,7 @@ void lineaization(double *XX, double *XY, double *beta0, double *beta1, double *
 
 void lineaization_lasso(double *XX, double *XY, double *beta0, double *beta1, double *beta_tild, double *g, int *idx_a, int *idx_i, int *size_a, int *idx_a1, int *idx_i1, int *size_a1, double T, double threshold, int intercept, int dim)
 {
-    int j,k,w_idx;
+    int j;
     
     //for(j=0; j<dim; j++){
     //    g[j] = 0;
@@ -383,7 +383,7 @@ void lineaization_lasso(double *XX, double *XY, double *beta0, double *beta1, do
 
 void lineaization_lasso_dantzig(double *XX, double *XY, double *beta0, double *beta1, double *beta_tild, double *g, int *idx_a, int *idx_scr, int *size_a, int *idx_a1, int *idx_i1, int *size_a1, double T, double threshold, int intercept, int dim)
 {
-    int j,k,w_idx;
+    int j;
     
     *size_a1 = 0;
     for(j=0; j<dim; j++){
@@ -415,7 +415,7 @@ void lineaization_lasso_dantzig(double *XX, double *XY, double *beta0, double *b
 
 void lineaization_clime(double *beta0, double *beta1, double *beta_tild, double *g, int *idx_a, int *size_a, int *idx_a1, int *idx_i1, int *size_a1, double T, double threshold, int dim)
 {
-    int j,k,w_idx;
+    int j;
     
     *size_a1 = 0;
     for(j=0; j<dim; j++){

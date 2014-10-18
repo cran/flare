@@ -94,8 +94,8 @@ Maintainer: Xingguo Li <xingguo.leo@gmail.com>
 ## load library
 library(flare)
 ## generate data
-n = 100
-d = 200
+n = 50
+d = 100
 X = matrix(rnorm(n*d), n, d)
 beta = c(3,2,0,1.5,rep(0,d-4))
 eps = rnorm(n)

@@ -8,8 +8,8 @@
 
 void lasso_ladm_scr(double *XY0, double *Xy, double *X0, double *X, double *XX0, double *XX, int *idx_scr, int num_scr, int ndata, int dim, double *beta, double *T, double rho, int *ite, double lambda, int max_ite, double prec, int intercept, int flag, int nlamb)
 {
-    int j,k,m,w_idx,size_a,size_a1,size_a_pre,gap_track,ite2;
-    double gap_ext,max_dif,alp_dif,beta_dif,mu_dif,threshold,tmpd,alp_abs,alp_tmp,T0,ratio,epsT,Q,Q0,F;
+    int j,k,m,w_idx,size_a,size_a1,size_a_pre;
+    double gap_ext,max_dif,beta_dif,threshold,tmpd,ratio,epsT;
     int * idx_tmp;
     
     
@@ -180,7 +180,7 @@ void lasso_ladm_scr(double *XY0, double *Xy, double *X0, double *X, double *XX0,
 void slim_lasso_ladm_scr(double *XY0, double *X0, double *XX, double *beta, int *n, int *d, int *ite_int, int *ite_int1, int *ite_int2, int *num_scr_1, int *num_scr_2, int *idx_scr, int * idx_scr_1, int * idx_scr_2, double * gamma, double * lambda, int * nnlambda, int *max_ite, double *prec, int * intercept)
 {
     int j,k,m,ndata,dim,nlambda,ite1,ite2,ite,max_ite0,max_ite1,max_ite2,num_scr,num_scr1,num_scr2,num_scr1_tmp,num_scr2_tmp,flag,flag1,flag2;
-    double T,T1,T2,rho,zero,eps,eps1,eps2,ilambda,nrholamb;
+    double T,T1,T2,rho,zero,eps,eps1,eps2,ilambda;
     
     //time0 = 0;
     //time1 = 0;
@@ -229,6 +229,7 @@ void slim_lasso_ladm_scr(double *XY0, double *X0, double *XX, double *beta, int 
     for(j=0; j<num_scr; j++) {
         idx_scr[j] = idx_scr[j]-1;
     }
+    rho = 1;
     flag = 0;
     flag1 = 1;
     flag2 = 1;

@@ -27,8 +27,8 @@ void sugm_clime_ladm_scr(double *X0, double *XX, double *beta, double *x0, int *
     num_scr1 = *num_scr_1;
     num_scr2 = *num_scr_2;
     max_ite1 = *max_ite;
-    max_ite2 = *max_ite;
-    max_ite0 = ceil(max_ite2/10);
+    max_ite2 = ceil(max_ite1/5);
+    max_ite0 = ceil(max_ite1/10);
     eps1 = *prec;
     eps2 = *prec;
     eps = eps2*10;

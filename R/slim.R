@@ -262,7 +262,7 @@ coef.slim <- function(object, lambda.idx = c(1:3), beta.idx = c(1:3), ...)
   cat("\n")
   cat(" intercept ")
   for(i in 1:lambda.n){
-    cat("",formatC(object$intercept[i],digits=4,width=10),"")
+    cat("",formatC(object$intercept[lambda.idx[i]],digits=4,width=10),"")
   }
   cat("\n")
   for(i in 1:beta.n){

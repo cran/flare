@@ -2,7 +2,6 @@
 # Package: flare                                                                   #
 # sugm.tiger.ladm.scr(): Tuning insensitive method for                             #
 #                        sparse precision matrix estimation                        #
-#                                                                                  #
 # Authors: Xingguo Li                                                              #
 # Emails: <xingguo.leo@gmail.com>                                                  #
 # Date: Jul 8th, 2014                                                              #
