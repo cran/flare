@@ -139,7 +139,7 @@ sugm.select <- function(est,
     est$criterion = criterion
     class(est) = "select"
     return(est)
-  }  	
+  }
 }
 
 #-----------------------------------------------------------------------#

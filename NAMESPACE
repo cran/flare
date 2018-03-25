@@ -1,4 +1,4 @@
-useDynLib("flare")
+useDynLib("flare", .registration=TRUE)
 import("MASS","Matrix","lattice","igraph")
 export("sugm", 
        "sugm.generator",
@@ -15,6 +15,7 @@ export("sugm",
        "sugm.plot",
        "print.slim",
        "print.sugm",
+       "print.roc",
        "print.select",
        "print.sim",
        "plot.slim",
@@ -24,12 +25,18 @@ export("sugm",
        "plot.sim",
        "coef.slim",
        "predict.slim")
+importFrom("grDevices", "dev.off", "gray.colors", "postscript")
+importFrom("graphics", "lines", "matplot", "par", "plot")
+importFrom("methods", "new")
+importFrom("stats", "cor", "cov", "runif", "sd")
+importFrom("utils", "flush.console")
 S3method("print", "sugm")
 S3method("print", "slim")
 S3method("print", "roc")
 S3method("print", "select")
 S3method("print", "sim")
 S3method("plot", "sugm")
+S3method("plot", "slim")
 S3method("plot", "roc")
 S3method("plot", "select")
 S3method("plot", "sim")

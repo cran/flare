@@ -4,8 +4,8 @@
 #                        estimation                                                #
 # Author: Xingguo Li                                                               #
 # Email: <xingguo.leo@gmail.com>                                                   #
-# Date: Jul 8th, 2014                                                              #
-# Version: 1.4.0                                                                   #
+# Date: Jan 3rd, 2018                                                              #
+# Version: 1.6.0                                                                   #
 #----------------------------------------------------------------------------------#
 
 sugm.clime.ladm.scr <- function(Sigma, lambda, nlambda, n, d, maxdf, rho, shrink, prec, max.ite, verbose){
@@ -70,8 +70,10 @@ sugm.clime.ladm.scr <- function(Sigma, lambda, nlambda, n, d, maxdf, rho, shrink
     }
     cnt = unlist(str[10])
     col.cnz[j+1] = cnt+col.cnz[j]
-    x[(col.cnz[j]+1):col.cnz[j+1]] = unlist(str[4])[1:cnt]
-    row.idx[(col.cnz[j]+1):col.cnz[j+1]] = unlist(str[11])[1:cnt]
+    if(cnt>0){
+      x[(col.cnz[j]+1):col.cnz[j+1]] = unlist(str[4])[1:cnt]
+      row.idx[(col.cnz[j]+1):col.cnz[j+1]] = unlist(str[11])[1:cnt]
+    }
     ite.int[j,] = unlist(str[12])
     ite.int1[j,] = unlist(str[13])
     ite.int2[j,] = unlist(str[14])
@@ -85,5 +87,5 @@ sugm.clime.ladm.scr <- function(Sigma, lambda, nlambda, n, d, maxdf, rho, shrink
   ite[[1]] = ite.int1
   ite[[2]] = ite.int2
   ite[[3]] = ite.int
-  return(list(icov=icov.list, icov1=icov.list1,ite=ite, x=x, col.cnz=col.cnz, row.idx=row.idx))
+  return(list(icov=icov.list, icov1=icov.list1,ite=ite, x=x[1:col.cnz[d+1]], col.cnz=col.cnz, row.idx=row.idx[1:col.cnz[d+1]]))
 }

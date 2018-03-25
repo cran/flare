@@ -4,8 +4,8 @@
 #                        sparse precision matrix estimation                        #
 # Authors: Xingguo Li                                                              #
 # Emails: <xingguo.leo@gmail.com>                                                  #
-# Date: Jul 8th, 2014                                                              #
-# Version: 1.4.0                                                                   #
+# Date: Jan 3rd, 2018                                                              #
+# Version: 1.6.0                                                                   #
 #----------------------------------------------------------------------------------#
 
 sugm.tiger.ladm.scr <- function(data, n, d, maxdf, rho, lambda, shrink, prec, max.ite, verbose){
@@ -85,8 +85,10 @@ sugm.tiger.ladm.scr <- function(data, n, d, maxdf, rho, lambda, shrink, prec, ma
     }
     cnt = unlist(str[13])
     col.cnz[j+1] = cnt+col.cnz[j]
-    x[(col.cnz[j]+1):col.cnz[j+1]] = unlist(str[6])[1:cnt]
-    row.idx[(col.cnz[j]+1):col.cnz[j+1]] = unlist(str[14])[1:cnt]
+    if(cnt>0){
+      x[(col.cnz[j]+1):col.cnz[j+1]] = unlist(str[6])[1:cnt]
+      row.idx[(col.cnz[j]+1):col.cnz[j+1]] = unlist(str[14])[1:cnt]
+    }
     ite.int[j,] = unlist(str[15])
     ite.int1[j,] = unlist(str[16])
     ite.int2[j,] = unlist(str[17])
@@ -106,5 +108,5 @@ sugm.tiger.ladm.scr <- function(data, n, d, maxdf, rho, lambda, shrink, prec, ma
 #   ite[[4]] = ite.int4
 #   ite[[5]] = ite.int5
 #   ite[[6]] = ite.int3
-  return(list(icov=icov.list, icov1=icov.list1,ite=ite, x=x, col.cnz=col.cnz, row.idx=row.idx))
+  return(list(icov=icov.list, icov1=icov.list1,ite=ite, x=x[1:col.cnz[d+1]], col.cnz=col.cnz, row.idx=row.idx[1:col.cnz[d+1]]))
 }
