@@ -114,7 +114,7 @@ sugm.generator <- function(n = 200, d = 50, graph = "random", v = NULL, u = NULL
   if(graph == "scale-free"){
     if(is.null(u)) u = 0.1
     if(is.null(v)) v = 0.3
-    out = .C("SFGen",dd0=as.integer(2),dd=as.integer(d),G=as.integer(theta),seed=as.integer(seed),package="flare")
+    out = .C("SFGen",dd0=as.integer(2),dd=as.integer(d),G=as.integer(theta),seed=as.integer(seed),PACKAGE="flare")
     theta = matrix(as.numeric(out$G),d,d)
   }
   if(graph=="band"||graph=="cluster"||graph=="hub"||graph=="random"||graph=="scale-free") {

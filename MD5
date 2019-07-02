@@ -1,4 +1,4 @@
-a9c23cb43c80c63d84264026a06c6680 *DESCRIPTION
+ce18383f8d4bdc9149748d670111f05b *DESCRIPTION
 ed5b3fff6e76997236a1b11095ba5428 *NAMESPACE
 8205bd9e4ae924b4e8e9a1d747123689 *R/slim.R
 bb1bb71ef1ae2e130cc68084a489f684 *R/slim.dantzig.ladm.scr.R
@@ -10,7 +10,7 @@ c492877e2ab935e25d9f6275e7261139 *R/slim.lq.ladm.scr.btr.R
 57ad91e6ea066d07b2a52f060b86507d *R/sugm.R
 fc2fdd8a3be7e776e2ba0e9fa5dac8dc *R/sugm.clime.ladm.scr.R
 dcb9770788be1ea2dc3ec3b219dfdeb8 *R/sugm.cv.R
-74ecc6d3878e61dda14a2c43e25ae3ec *R/sugm.generator.R
+9401d16705ddec007872f465de0ee41a *R/sugm.generator.R
 310663f2e9a5a187741769cda405f1fe *R/sugm.plot.R
 5903ca34621a24312c348c2fe86109c4 *R/sugm.roc.R
 1063a455477b39dff27517b96c790c7a *R/sugm.select.R
@@ -45,7 +45,7 @@ df440f1c28ea9b9c887e7b928276a6e6 *src/SFGen.c
 94348ebbf36d8a08f81855f93ebca74f *src/euc_proj.c
 9c46d81cd0046acb0a602b3884ecb2ad *src/mymath.c
 7be25396fbacd6150bf03c39c51cd7f4 *src/mymath.h
-7c22b1b500cab25872924e218f1645f5 *src/registerDynamicSymbol.c
+36573e8c40ceffa76b8cdf054ce1988e *src/registerDynamicSymbol.c
 f2fb6e64bf2498b6d9e2a9c52b84b7a6 *src/slim_dantzig_ladm_scr.c
 0aa6e136715ff4f4f706f3ffb7f191c6 *src/slim_lad_ladm_scr_btr.c
 c02d795bc7d5e1a82c00ae9dbf43c1a1 *src/slim_lasso_ladm_scr.c

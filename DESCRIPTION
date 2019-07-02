@@ -1,7 +1,7 @@
 Package: flare
 Type: Package
 Title: Family of Lasso Regression
-Version: 1.6.0
+Version: 1.6.0.1
 Date: 2018-03-21
 Author: Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan, and Han Liu
 Maintainer: Xingguo Li <xingguo.leo@gmail.com>
@@ -11,5 +11,5 @@ Description: Provide the implementation of a family of Lasso variants including 
 License: GPL-2
 Repository: CRAN
 NeedsCompilation: yes
-Packaged: 2018-03-24 16:13:43 UTC; maomao-xingguo
-Date/Publication: 2018-03-25 15:01:28 UTC
+Packaged: 2019-07-02 07:04:17 UTC; ripley
+Date/Publication: 2019-07-02 09:34:36
