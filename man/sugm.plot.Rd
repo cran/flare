@@ -61,8 +61,10 @@ sugm.plot(L$theta)
 L = sugm.generator(graph = "cluster")
 sugm.plot(L$theta)
 
+\dontrun{
 #show working directory
 getwd()
 #plot 5 graphs and save the plots as eps files in the working directory  
 sugm.plot(L$theta, epsflag = TRUE, cur.num = 5)
+}
 }

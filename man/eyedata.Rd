@@ -1,5 +1,7 @@
 \name{eyedata}
 \alias{eyedata}
+\alias{x}
+\alias{y}
 
 \title{
 The Bardet-Biedl syndrome Gene expression data from Scheetz et al. (2006)
