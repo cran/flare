@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-
 void SFGen(int *dd0, int*dd, int *G, int *seed){
     int i,j;
     int d0,d;

@@ -98,9 +98,6 @@ plot(L)
 ## random sparse graph
 L = sugm.generator(vis = TRUE)
 
-## random dense graph
-L = sugm.generator(prob = 0.5, vis = TRUE)
-
 ## hub graph with 6 hubs
 L = sugm.generator(graph = "hub", g = 6, vis = TRUE)
 
