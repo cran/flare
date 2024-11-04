@@ -1,4 +1,4 @@
-935f80ec00175d4688fa425f553768d3 *DESCRIPTION
+2a458cf53c842e786390936ee87f55e4 *DESCRIPTION
 ed5b3fff6e76997236a1b11095ba5428 *NAMESPACE
 8205bd9e4ae924b4e8e9a1d747123689 *R/slim.R
 bb1bb71ef1ae2e130cc68084a489f684 *R/slim.dantzig.ladm.scr.R
@@ -15,10 +15,10 @@ dcb9770788be1ea2dc3ec3b219dfdeb8 *R/sugm.cv.R
 5903ca34621a24312c348c2fe86109c4 *R/sugm.roc.R
 1063a455477b39dff27517b96c790c7a *R/sugm.select.R
 07b74eae0060a091f35fb200cc9fbbb2 *R/sugm.tiger.ladm.scr.R
-d9ec14bbbe1522884a9fa38a442dac6b *build/vignette.rds
-7bf0fb79259cd2ab5bba9f25f3d91bf3 *data/eyedata.rda
+8cd32aa15251c52ec9b9e600222165b5 *build/vignette.rds
+bd9d723a7e895e8715f7dffc3f8a55e1 *data/eyedata.rda
 be3aff9967dedaaf731746577e960a21 *inst/doc/vignette.Rnw
-1b3acfab40beedad16c7a0b525861e0a *inst/doc/vignette.pdf
+a915f60835f2d695b2d976be3a100b3b *inst/doc/vignette.pdf
 7efd295bb312b05fec081fcef38f90f4 *man/coef.slim.Rd
 09d582551e35c0ecd9c466f245a84cd3 *man/eyedata.Rd
 7437e1183a389c5a931cf8823fb814f8 *man/flare-internal.Rd
@@ -40,7 +40,7 @@ d118d0f1203b60af29ad6018bf8a3910 *man/sugm.Rd
 db29f070e97c987a8c9bd03f3f752a4c *man/sugm.plot.Rd
 fc31b743f5bcee3206e4058c4cb4b24b *man/sugm.roc.Rd
 af924d3075e95bef0fe2760987801ffd *man/sugm.select.Rd
-549ef63bdf418097ed6010b52bc52f27 *src/SFGen.c
+8cd3f3241658a4a9d9dd3ab43025c300 *src/SFGen.c
 94348ebbf36d8a08f81855f93ebca74f *src/euc_proj.c
 9c46d81cd0046acb0a602b3884ecb2ad *src/mymath.c
 7be25396fbacd6150bf03c39c51cd7f4 *src/mymath.h

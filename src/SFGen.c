@@ -9,7 +9,7 @@ void SFGen(int *dd0, int*dd, int *G, int *seed){
     d0 = dd0[0];
     d = dd[0];
     double x;
-    int *size_a = (int*) Calloc(d, int);
+    int *size_a = (int*) R_Calloc(d, int);
     int tmp;
     int total;
     
@@ -48,5 +48,5 @@ void SFGen(int *dd0, int*dd, int *G, int *seed){
         size_a[j]++;
         size_a[i]++;
     }
-    Free(size_a);
+    R_Free(size_a);
 }
