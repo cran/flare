@@ -258,15 +258,14 @@ void dantzig_ladm_scr(double *Y0, double *X0, double *Y, double *X, double *XX, 
 
 void slim_dantzig_ladm_scr(double *Y0, double *X0, double *XX, double *beta, int *n, int *d, double *rho0, int *ite_int, int *ite_int1, int *ite_int2, int *num_scr_1, int *num_scr_2, int *idx_scr, int * idx_scr_1, int * idx_scr_2, double * gamma, double * lambda, int * nnlambda, int *max_ite, double *prec, int * intercept)
 {
-    int j,k,m,ndata,dim,nlambda,ite1,ite2,ite,max_ite0,max_ite1,max_ite2,num_scr,num_scr1,num_scr2,num_scr1_tmp,num_scr2_tmp,flag,flag1,flag2;
-    double T,T1,T2,rho,zero,eps,eps1,eps2,ilambda;
+    int j,k,m,dim,nlambda,ite1,ite2,ite,max_ite0,max_ite1,max_ite2,num_scr,num_scr1,num_scr2,num_scr1_tmp,num_scr2_tmp,flag,flag1,flag2;
+    double T,T1,T2,rho,eps,eps1,eps2,ilambda;
     
     //time0 = 0;
     //time1 = 0;
     //time2 = 0;
     //time3 = 0;
     dim = *d;
-    ndata = *n;
     rho = *rho0;
     T = *gamma;
     T1 = 0;
@@ -281,7 +280,6 @@ void slim_dantzig_ladm_scr(double *Y0, double *X0, double *XX, double *beta, int
     eps1 = *prec;
     eps2 = *prec;
     eps = eps2*10;
-    zero = 0;
 
     
     double *beta0 = (double*) malloc(dim*sizeof(double));
@@ -407,15 +405,14 @@ void slim_dantzig_ladm_scr(double *Y0, double *X0, double *XX, double *beta, int
 
 void slim_dantzig_ladm_scr2(double *Y0, double *X0, double *XX, double *beta, int *n, int *d, double *rho0, int *ite_int, int *ite_int1, int *num_scr_1, int *idx_scr, int * idx_scr_1, double * gamma, double * lambda, int * nnlambda, int *max_ite, double *prec, int * intercept)
 {
-    int j,k,m,ndata,dim,nlambda,ite1,ite,max_ite0,max_ite1,num_scr,num_scr1,num_scr1_tmp,flag,flag1;
-    double T,T1,rho,zero,eps,eps1,ilambda;
+    int j,k,m,dim,nlambda,ite1,ite,max_ite0,max_ite1,num_scr,num_scr1,num_scr1_tmp,flag,flag1;
+    double T,T1,rho,eps,eps1,ilambda;
     
     //time0 = 0;
     //time1 = 0;
     //time2 = 0;
     //time3 = 0;
     dim = *d;
-    ndata = *n;
     rho = *rho0;
     T = *gamma;
     T1 = 0;
@@ -426,7 +423,6 @@ void slim_dantzig_ladm_scr2(double *Y0, double *X0, double *XX, double *beta, in
     max_ite0 = ceil(max_ite1/10);
     eps1 = *prec;
     eps = eps1*10;
-    zero = 0;
     
     
     double *beta0 = (double*) malloc(dim*sizeof(double));

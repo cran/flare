@@ -1,7 +1,7 @@
 \name{print.sim}
 \alias{print.sim}
 \title{
-Print Function for for an object with S3 class \code{"sim"}
+Print Function for an object with S3 class \code{"sim"}
 }
 \description{
 Print the information about the sample size, the dimension, the pattern and sparsity of the true graph structure.
@@ -19,7 +19,7 @@ Print the information about the sample size, the dimension, the pattern and spar
 }
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 \seealso{
 \code{\link{sugm}} and \code{\link{sugm.generator}}

@@ -40,22 +40,22 @@ slim.lasso.ladm.scr(Y, X, lambda, nlambda, n, d, maxdf, max.ite, prec,
   \item{Sigma}{Covariance matrix.}
   \item{Omega}{Inverse covariance matrix.}
   \item{obj}{An object with S3 class returned from \code{"sugm"}.}
-  \item{loss}{Type of loss function for cross validation.}
-  \item{fold}{The number of fold for cross validatio.}
+  \item{loss}{Type of loss function for cross-validation.}
+  \item{fold}{The number of folds for cross-validation.}
   \item{n}{The number of observations (sample size).}
   \item{d}{Dimension of data.}
   \item{maxdf}{Maximal degree of freedom.}
-  \item{lambda}{Grid of non-negative values for the regularization parameter lambda.}
+  \item{lambda}{Grid of positive values for the regularization parameter \code{lambda}.}
   \item{nlambda}{The number of the regularization parameter lambda.}
   \item{shrink}{Shrinkage of regularization parameter based on precision of estimation.}
-  \item{rho}{Value of augmented Lagrangian multipiler.}
+  \item{rho}{Value of augmented Lagrangian multiplier.}
   \item{prec}{Stopping criterion.}
   \item{max.ite}{Maximal value of iterations.}
   \item{data}{\code{n} by \code{d} data matrix. }
   \item{Y}{Dependent variables in linear regression. }
   \item{X}{Design matrix in linear regression. }
   \item{q}{The vector norm used for the loss term. }
-  \item{intercept}{The indicator of whether including intercepts specifically. }
+  \item{intercept}{Indicator of whether to include intercepts.}
   \item{verbose}{Tracing information printing is disabled if \code{verbose = FALSE}. The default value is \code{TRUE}.}
 }
 \details{
@@ -67,7 +67,7 @@ slim.lasso.ladm.scr(Y, X, lambda, nlambda, n, d, maxdf, max.ite, prec,
 
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 %\note{
 %}

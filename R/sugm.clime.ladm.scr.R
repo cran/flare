@@ -40,10 +40,10 @@ sugm.clime.ladm.scr <- function(Sigma, lambda, nlambda, n, d, maxdf, rho, shrink
   col.cnz = rep(0,d+1)
   row.idx = rep(0,d*maxdf*nlambda)
   icov.list1 = vector("list", nlambda)
-  for(i in 1:nlambda){
+  for(i in seq_len(nlambda)){
     icov.list1[[i]] = matrix(0,d,d)
   }
-  for(j in 1:d){
+  for(j in seq_len(d)){
     idx.scr0 = idx.scr[,j]
     idx.scr1 = idx.scr0[1:num.scr1]
     idx.scr2 = idx.scr0[1:num.scr2]
@@ -65,7 +65,7 @@ sugm.clime.ladm.scr <- function(Sigma, lambda, nlambda, n, d, maxdf, rho, shrink
            as.integer(idx.scr0), as.integer(idx.scr1), as.integer(idx.scr2), 
            as.integer(max.ite), as.double(prec), as.integer(j), PACKAGE="flare")
     icov = matrix(unlist(str[3]), byrow = FALSE, ncol = nlambda)
-    for(i in 1:nlambda){
+    for(i in seq_len(nlambda)){
       icov.list1[[i]][,j] = icov[,i]
     }
     cnt = unlist(str[10])
@@ -79,7 +79,7 @@ sugm.clime.ladm.scr <- function(Sigma, lambda, nlambda, n, d, maxdf, rho, shrink
     ite.int2[j,] = unlist(str[14])
   }
   icov.list = vector("list", nlambda)
-  for(i in 1:nlambda){
+  for(i in seq_len(nlambda)){
     icov.i = icov.list1[[i]]
     icov.list[[i]] = icov.i*(abs(icov.i)<=abs(t(icov.i)))+t(icov.i)*(abs(t(icov.i))<abs(icov.i))
   }

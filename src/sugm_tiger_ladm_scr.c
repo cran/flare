@@ -9,7 +9,7 @@
 void tiger_lasso_ladm_scr(double *Y0, double *XY0, double *Xy, double *X0, double *X, double *XX0, double *XX, int *idx_scr, int num_scr, int ndata, int dim, double *beta, double *T, double rho, int *ite, double lambda, int max_ite, double prec, int flag, int nlamb, double *tau)
 {
     int j,k,m,w_idx,size_a,size_a1,size_a_pre;
-    double gap_ext,max_dif,beta_dif,threshold,tmpd,ratio,epsT,tau0,tau1,tmp;
+    double gap_ext,max_dif,beta_dif,threshold,tmpd,tau0,tau1,tmp;
     int * idx_tmp;
     //char c;
     
@@ -27,8 +27,6 @@ void tiger_lasso_ladm_scr(double *Y0, double *XY0, double *Xy, double *X0, doubl
     double *y_i = (double*) malloc(ndata*sizeof(double));
     double *g = (double*) malloc(num_scr*sizeof(double));
     double *r = (double*) malloc(ndata*sizeof(double));
-    ratio = 0.5;
-    epsT = 1e1;
     //stop = clock();
     //time1 += stop - start;
     
@@ -202,7 +200,7 @@ void sugm_tiger_ladm_scr(double *Y0, double *X0, double *XY0, double *XX, double
 {
     int j,k,m,ndata,dim,dim0,nlambda,ite1,ite2,ite,max_ite0,max_ite1,max_ite2,num_scr,num_scr1,num_scr2,num_scr1_tmp,num_scr2_tmp,flag,flag1,flag2,intercept;
     int idx,y_col,cnz,mdim0;
-    double T,T1,T2,rho,zero,eps,eps1,eps2,ilambda,sqrtn,nrholamb,tau0;
+    double T,T1,T2,rho,eps,eps1,eps2,ilambda,sqrtn,nrholamb,tau0;
     
     //time0 = 0;
     //time1 = 0;
@@ -225,7 +223,6 @@ void sugm_tiger_ladm_scr(double *Y0, double *X0, double *XY0, double *XX, double
     eps1 = *prec;
     eps2 = *prec;
     eps = eps2*10;
-    zero = 0;
     sqrtn = sqrt((double) ndata);
     intercept = 0;
     idx = (*idx0)-1;
@@ -369,4 +366,3 @@ void sugm_tiger_ladm_scr(double *Y0, double *X0, double *XY0, double *XX, double
     free(XY2);
     free(idx_col);
 }
-

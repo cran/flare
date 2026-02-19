@@ -21,7 +21,7 @@ sugm.roc <- function(path, theta, verbose = TRUE){
   ROC$tp = rep(0,length(path))
   ROC$fp = rep(0,length(path))
   ROC$F1 = rep(0,length(path))
-  for (r in 1:length(path)){
+  for (r in seq_along(path)){
     tmp = as.matrix(path[[r]]) 
     tp.all = (theta!=0)*(tmp!=0)
     diag(tp.all) = 0

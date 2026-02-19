@@ -11,6 +11,7 @@ sugm.cv <- function(obj, loss=c("likelihood", "tracel2"), fold=5) {
   x = obj$data
   if (is.null(x)) stop("No data matrix in sugm object.  Use data matrix instead of sample covariance matrix for computing sugm!")
   n = nrow(x)
+  if(fold < 2 || fold > n) stop("fold must be between 2 and nrow(data).")
   p = ncol(x)
   
   part.list = part.cv(n, fold)
@@ -21,14 +22,14 @@ sugm.cv <- function(obj, loss=c("likelihood", "tracel2"), fold=5) {
   lossfun = match.fun(lossname)
   
   loss.re = matrix(0, nrow = fold, ncol = obj$nlambda)
-  scalar = 1-1/nrow(x[part.list$testMat[,1],])
-  for (i in 1:fold) {
-    x.train = x[part.list$trainMat[,i],]
+  scalar = 1-1/nrow(x[part.list$testMat[,1],,drop=FALSE])
+  for (i in seq_len(fold)) {
+    x.train = x[part.list$trainMat[,i],,drop=FALSE]
     sugm.cv = sugm(x.train, lambda=obj$lambda, method=obj$method,sym=obj$sym,verbose=obj$verbose,
                      standardize=obj$standardize)
-    x.test = x[part.list$testMat[,i],]
+    x.test = x[part.list$testMat[,i],,drop=FALSE]
     ntest = nrow(x.test)
-    for (j in 1:obj$nlambda) {
+    for (j in seq_len(obj$nlambda)) {
       loss.re[i,j] = loss.re[i,j]  + lossfun(cov(x.test)*scalar,  sugm.cv$icov[[j]])
     }
   }
@@ -56,7 +57,7 @@ part.cv <- function(n, fold) {
   
   nn = 1:n
   
-  for (j in 1:fold) {
+  for (j in seq_len(fold)) {
     sel = ((j-1)*ntest+1):(j*ntest)
     testMat[,j] = ind[sel ]
     sel2 =nn[ !(nn %in% sel) ]

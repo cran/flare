@@ -2,33 +2,33 @@
 \alias{sugm}
 
 \title{
-High-deimensional Sparse Undirected Graphical Models.
+High-dimensional Sparse Undirected Graphical Models
 }
 
 \description{
-The function "sugm" estimates sparse undirected graphical models, i.e. Gaussian precision matrix, in high dimensions. We adopt two estimation procedures based on column by column regression scheme: (1) Tuning-Insensitive Graph Estimation and Regression based on square root Lasso (tiger); (2) The Constrained L1 Minimization for Sparse Precision Matrix Estimation using either L1 penalty (clime). The optimization algorithm for all three methods are implemented based on the alternating direction method of multipliers (ADMM) with the linearization method and multi-stage screening of variables. Missing values can be tolerated for CLIME in the data matrix. The computation is memory-optimized using the sparse matrix output.
+The function "sugm" estimates sparse undirected graphical models (Gaussian precision matrices) in high dimensions. Two procedures are implemented using a column-wise regression scheme: (1) Tuning-Insensitive Graph Estimation and Regression based on square-root Lasso (\code{"tiger"}); and (2) The Constrained L1 Minimization for Sparse Precision Matrix Estimation (\code{"clime"}). The optimization algorithm is based on the alternating direction method of multipliers (ADMM), linearization, and multi-stage screening. Missing values can be tolerated for CLIME when the input is a data matrix. Computation is memory-optimized using sparse matrix output.
 }
 
 \usage{
 sugm(data, lambda = NULL, nlambda = NULL, lambda.min.ratio = NULL, 
-     rho = NULL, method = "tiger", sym = "or", shrink=NULL, 
+     rho = NULL, method = "tiger", sym = "or", shrink = NULL, 
      prec = 1e-4, max.ite = 1e4, standardize = FALSE, 
      perturb = TRUE, verbose = TRUE)
 }
 
 \arguments{
-  \item{data}{There are 2 options for \code{"clime"}: (1) \code{data} is an \code{n} by \code{d} data matrix (2) a \code{d} by \code{d} sample covariance matrix. The program automatically identifies the input matrix by checking the symmetry. (\code{n} is the sample size and \code{d} is the dimension). For \code{"tiger"}, covariance input is not supported and \code{d}\eqn{ \ge }3 is required. For \code{"clime"}, \code{d}\eqn{ \ge }2 is required.}
-  \item{lambda}{A sequence of decresing positive numbers to control the regularization. Typical usage is to leave the input \code{lambda = NULL} and have the program compute its own \code{lambda} sequence based on \code{nlambda} and \code{lambda.min.ratio}. Users can also specify a sequence to override this. Default value is from \code{lambda.max} to \code{lambda.min.ratio*lambda.max}. For \code{"tiger"}, the default value of \code{lambda.max} is \eqn{\pi\sqrt{\log(d)/n}}. For \code{"clime"} , the default value of \code{lambda.max} is the minimum regularization parameter, which yields an all-zero off-diagonal estiamtes.}
+  \item{data}{There are two options for \code{"clime"}: (1) an \code{n} by \code{d} data matrix, or (2) a \code{d} by \code{d} sample covariance matrix. The input type is identified by symmetry. For \code{"tiger"}, covariance input is not supported and \code{d}\eqn{ \ge }3 is required. For \code{"clime"}, \code{d}\eqn{ \ge }2 is required.}
+  \item{lambda}{A sequence of decreasing, positive, finite numbers controlling regularization. Typical usage is \code{lambda = NULL}, in which case the sequence is generated from \code{nlambda} and \code{lambda.min.ratio}.}
   \item{nlambda}{The number of values used in \code{lambda}. Default value is 5.}
-  \item{lambda.min.ratio}{The smallest value for \code{lambda}, as a fraction of the uppperbound (\code{lambda.max}) of the regularization parameter. The program can automatically generate \code{lambda} as a sequence of length = \code{nlambda} starting from \code{lambda.max} to \code{lambda.min.ratio*lambda.max} in log scale. The default value is 0.25 for \code{"tiger"} and 0.5 for \code{"clime"}.}
-  \item{rho}{Penalty parameter used in the optimization algorithm for \code{clime}. The default value is \eqn{\sqrt{d}}.}
+  \item{lambda.min.ratio}{The minimum value of generated \code{lambda} as a fraction of \code{lambda.max}. The default value is 0.4 for both \code{"tiger"} and \code{"clime"}.}
+  \item{rho}{Penalty parameter used in the optimization algorithm. The default value is 1.}
   \item{method}{\code{"tiger"} is applied if \code{method = "tiger"} and \code{"clime"} is applied if \code{method="clime"}. Default value is \code{"tiger"}.}
   \item{sym}{Symmetrization of output graphs. If \code{sym = "and"}, the edge between node \code{i} and node \code{j} is selected ONLY when both node \code{i} and node \code{j} are selected as neighbors for each other. If \code{sym = "or"}, the edge is selected when either node \code{i} or node \code{j} is selected as the neighbor for each other. The default value is \code{"or"}.}
-  \item{shrink}{Shrinkage of regularization parameter based on precision of estimation. The default value is 1.5 if \code{method = "clime"} and the default value is 0 if \code{method="tiger"}.}
+  \item{shrink}{Shrinkage of the regularization parameter based on estimation precision. The default value is 0.}
   \item{prec}{Stopping criterion. The default value is 1e-4.}
   \item{max.ite}{The iteration limit. The default value is 1e4.}
   \item{standardize}{Variables are standardized to have mean zero and unit standard deviation if \code{standardize = TRUE}. The default value is \code{FALSE}.}
-  \item{perturb}{The diagonal of \code{Sigma} is added by a positive value to guarantee that \code{Sigma} is positive definite if \code{perturb = TRUE}. User can specify a numeric value for \code{perturbe}. The default value is \code{perturb = TRUE}.}
+  \item{perturb}{For \code{"clime"}, if \code{TRUE}, adds \eqn{1/\sqrt{n}} to the diagonal of \code{Sigma}; if \code{FALSE}, no perturbation is added; a numeric value can also be supplied directly. The default value is \code{TRUE}.}
   \item{verbose}{Tracing information printing is disabled if \code{verbose = FALSE}. The default value is \code{TRUE}.}
   }
 \details{
@@ -75,10 +75,10 @@ An object with S3 class \code{"sugm"} is returned:
   The sparsity levels of the graph path.
   }
   \item{ite}{
-  If \code{method = "clime"}, it is a list of two matrices where ite[[1]] is the number of external iterations and ite[[2]] is the number of internal iterations with the entry of (i,j) as the number of iteration of i-th column and j-th lambda. If \code{method="tiger"}, it is a matrix of iteration with the entry of (i,j) as the number of iteration of i-th column and j-th lambda. 
+  Iteration counts returned by the underlying optimization solver.
   }
   \item{df}{
-  It is a \code{d} by \code{nlambda} matrix. Each row contains the number of nonzero coefficients along the lasso solution path. 
+  A \code{d} by \code{nlambda} matrix containing nonzero counts along the estimated path.
   }
   \item{standardize}{The \code{standardize} from the input.}
   \item{perturb}{The \code{perturb} from the input.}
@@ -87,7 +87,7 @@ An object with S3 class \code{"sugm"} is returned:
 
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 
 \references{

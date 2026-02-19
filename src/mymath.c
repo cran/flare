@@ -138,11 +138,10 @@ void fabs_vc(double *v_in, double *v_out, int n){
 }
 
 void max_fabs_vc(double *v_in, double *v_out, double *vmax, int *n1, int n, double z){
-    int i,cnt;
+    int i;
     double tmp, v_abs;
 
     tmp = 0;
-    cnt = 0;
     for(i=0; i<n; i++){
         v_abs = fabs(v_in[i]);
         v_out[i] = v_abs;

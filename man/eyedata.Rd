@@ -25,7 +25,7 @@ Gene expression data (20 genes for 120 samples) from the microarray experiments 
 
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 
 \references{

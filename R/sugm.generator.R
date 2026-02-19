@@ -71,7 +71,7 @@ sugm.generator <- function(n = 200, d = 50, graph = "random", v = NULL, u = NULL
   if(graph == "band"){
     if(is.null(u)) u = 0.1
     if(is.null(v)) v = 0.3
-    for(i in 1:g){
+    for(i in seq_len(g)){
       diag(theta[1:(d-i),(1+i):d]) = 1
       diag(theta[(1+i):d,1:(d-1)]) = 1
     }	
@@ -79,7 +79,7 @@ sugm.generator <- function(n = 200, d = 50, graph = "random", v = NULL, u = NULL
   if(graph == "cluster"){
     if(is.null(u)) u = 0.1
     if(is.null(v)) v = 0.3
-    for(i in 1:g){
+    for(i in seq_len(g)){
       tmp = which(g.ind==i)
       tmp2 = matrix(runif(length(tmp)^2,0,0.5),length(tmp),length(tmp))
       tmp2 = tmp2 + t(tmp2)		 	
@@ -91,7 +91,7 @@ sugm.generator <- function(n = 200, d = 50, graph = "random", v = NULL, u = NULL
   if(graph == "hub"){
     if(is.null(u)) u = 0.1
     if(is.null(v)) v = 0.3
-    for(i in 1:g){
+    for(i in seq_len(g)){
       tmp = which(g.ind==i)
       theta[tmp[1],tmp] = 1
       theta[tmp,tmp[1]] = 1
@@ -138,8 +138,8 @@ sugm.generator <- function(n = 200, d = 50, graph = "random", v = NULL, u = NULL
     fullfig[1] = image(theta, col = gray.colors(256),  main = "Adjacency Matrix")
     
     fullfig[2] = image(sigma, col = gray.colors(256), main = "Covariance Matrix")
-    g = graph.adjacency(theta, mode="undirected", diag=FALSE)
-    layout.grid = layout.fruchterman.reingold(g)
+    g = graph_from_adjacency_matrix(theta, mode="undirected", diag=FALSE)
+    layout.grid = layout_with_fr(g)
     
     fullfig[3] = plot(g, layout=layout.grid, edge.color='gray50',vertex.color="red", 
                       vertex.size=3, vertex.label=NA,main = "Graph Pattern")
@@ -174,8 +174,8 @@ plot.sim = function(x, ...){
             mai = c(0.3,0.3,0.3,0.3))
   image(as.matrix(x$theta), col = gray.colors(256),  main = "Adjacency Matrix")
   image(x$sigma, col = gray.colors(256), main = "Covariance Matrix")
-  g = graph.adjacency(x$theta, mode="undirected", diag=FALSE)
-  layout.grid = layout.fruchterman.reingold(g)
+  g = graph_from_adjacency_matrix(as.matrix(x$theta), mode="undirected", diag=FALSE)
+  layout.grid = layout_with_fr(g)
   
   plot(g, layout=layout.grid, edge.color='gray50',vertex.color="red", vertex.size=3, 
        vertex.label=NA,main = "Graph Pattern")

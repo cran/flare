@@ -6,12 +6,12 @@ Model selection for high-dimensional undirected graphical models
 }
 
 \description{
-Implements the regularization parameter selection for high dimensional undirected graphical models. The optional approaches are stability approach to regularization selection (stars) and cross validation selection (cv).
+Implements regularization parameter selection for high-dimensional undirected graphical models. Supported approaches are Stability Approach to Regularization Selection (\code{"stars"}) and cross-validation (\code{"cv"}).
 }
 
 \usage{
-sugm.select(est, criterion = "stars", stars.subsample.ratio = NULL, 
-            stars.thresh = 0.1,rep.num = 20, fold = 5, 
+sugm.select(est, criterion = "stars", stars.subsample.ratio = NULL,
+            stars.thresh = 0.1, rep.num = 20, fold = 5,
             loss="likelihood", verbose = TRUE)
 }
 
@@ -23,19 +23,19 @@ An object with S3 class \code{"sugm"}
 Model selection criterion. \code{"stars"} and \code{"cv"} are available for both graph estimation methods. The default value is \code{"stars"}.
 }
   \item{stars.subsample.ratio}{
-The subsampling ratio. The default value is \code{10*sqrt(n)/n} when \code{n>144} and \code{0.8} when \code{n<=144}, where \code{n} is the sample size. Only applicable when \code{criterion = "stars"}.
+The subsampling ratio. The default value is \code{10*sqrt(n)/n} when \code{n > 144} and \code{0.8} when \code{n <= 144}, where \code{n} is the sample size. Must be in \code{(0,1)}. Only applicable when \code{criterion = "stars"}.
 }
   \item{stars.thresh}{
-The variability threshold in stars. The default value is \code{0.1}. Only applicable when \code{criterion = "stars"}.
+The variability threshold in STARS. Must be in \code{[0,1]}. The default value is \code{0.1}. Only applicable when \code{criterion = "stars"}.
 }
   \item{rep.num}{
-The number of subsamplings. The default value is \code{20}. 
+The number of subsamples. Must be at least 1. The default value is \code{20}.
 }
   \item{fold}{
-The number of folds used in cross validation. The default value is \code{5}. Only applicable when \code{criterion = "cv"}.
+The number of folds used in cross-validation. Must be between 2 and \code{n}. The default value is \code{5}. Only applicable when \code{criterion = "cv"}.
 }
   \item{loss}{
-  Loss to be used in cross validation. Two losses are available: \code{"likelihood"} and \code{"tracel2"}. Default \code{"likelihood"}. Only applicable when \code{criterion = "cv"}.
+  Loss used in cross-validation. Two losses are available: \code{"likelihood"} and \code{"tracel2"}. Default is \code{"likelihood"}. Only applicable when \code{criterion = "cv"}.
   }
   \item{verbose}{
 If \code{verbose = FALSE}, tracing information printing is disabled. The default value is \code{TRUE}.
@@ -43,7 +43,7 @@ If \code{verbose = FALSE}, tracing information printing is disabled. The default
 }
 
 \details{
-Stability approach to regularization selection (stars) is a natural way to select optimal regularization parameter for all three estimation methods. It selects the optimal graph by variability of subsamplings and tends to over-select edges in Gaussian graphical models. Besides selecting the regularization parameters, stars can also provide an additional estimated graph by merging the corresponding subsampled graphs using the frequency counts. The K-fold cross validation is also provided for selecting the parameter \code{lambda}, and two loss functions are adopted as follow
+Stability Approach to Regularization Selection (STARS) selects an optimal regularization parameter by variability across subsamples, and tends to over-select edges in Gaussian graphical models. In addition to selecting regularization parameters, STARS can provide an additional merged graph estimate based on edge frequencies across subsamples. K-fold cross-validation is also available for selecting \code{lambda}, using the following losses:
 \deqn{
 likelihood: Tr(\Sigma \Omega) - \log|\Omega|
 }
@@ -75,17 +75,20 @@ The selected regularization/thresholding parameter.
   \item{opt.sparsity}{
 The sparsity level of \code{"refit"}.
 }
+\item{loss}{
+Cross-validation loss used for selection. Only applicable when \code{criterion = "cv"}.
+}
 
-and anything else inluded in the input \code{est}
+and anything else included in the input \code{est}.
 }
 
 \note{
-The model selection is NOT available when the data input is the sample covaraince matrix.
+Model selection is not available when the data input is a sample covariance matrix.
 }
 
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 
 \references{

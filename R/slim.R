@@ -34,26 +34,32 @@ slim <- function(X,
   if(verbose) {
     cat("Sparse Linear Regression with L1 Regularization.\n")
   }
-  if(sum(is.na(X))>0 || sum(is.na(Y))>0){
+  if(is.null(X)||is.null(Y)) {
+    cat("No data input.\n")
+    return(NULL)
+  }
+  X = as.matrix(X)
+  Y = as.matrix(Y)
+  if(ncol(Y) != 1) {
+    cat("Y must be a vector or one-column matrix.\n")
+    return(NULL)
+  }
+  if(nrow(X) != nrow(Y)) {
+    cat("X and Y must have the same number of rows.\n")
+    return(NULL)
+  }
+  if(anyNA(X) || anyNA(Y)){
     cat("The input has missing values.\n")
-    Xrow.na = rowSums(is.na(X))
-    nXrow.na = sum(Xrow.na)
-    Xidx.na = which(Xrow.na>0)
-    Y.na = as.numeric(is.na(Y))
-    nY.na = sum(Y.na)
-    Yidx.na = which(Y.na>0)
-    idx.na = unique(c(Xidx.na,Yidx.na))
-    X = X[-idx.na,]
-    Y = as.matrix(Y[-idx.na,],ncol=1)
+    Xrow.na = rowSums(is.na(X)) > 0
+    Yrow.na = rowSums(is.na(Y)) > 0
+    idx.na = which(Xrow.na | Yrow.na)
+    X = X[-idx.na,,drop=FALSE]
+    Y = Y[-idx.na,,drop=FALSE]
     n = nrow(X)
     if(n==0) {
       cat("Too many missing values.\n")
       return(NULL)
     }
-  }
-  if(is.null(X)||is.null(Y)) {
-    cat("No data input.\n")
-    return(NULL)
   }
   n = nrow(X)
   d = ncol(X)
@@ -61,15 +67,28 @@ slim <- function(X,
     cat("No data input.\n")
     return(NULL)
   }
+  if(n <= 1) {
+    cat("At least two observations are required.\n")
+    return(NULL)
+  }
   maxdf = max(n,d)
-  xm=matrix(rep(colMeans(X),n),nrow=n,ncol=d,byrow=T)
-  x1=X-xm
-  sdxinv=1/sqrt(colSums(x1^2)/(n-1))
-  xx=x1*matrix(rep(sdxinv,n),nrow=n,ncol=d,byrow=T)
+  x.mean = colMeans(X)
+  x1 = sweep(X, 2, x.mean, FUN = "-")
+  x.sd = sqrt(colSums(x1^2)/(n-1))
+  if(any(x.sd <= 0)) {
+    cat("X contains at least one constant column.\n")
+    return(NULL)
+  }
+  sdxinv = 1/x.sd
+  xx = sweep(x1, 2, sdxinv, FUN = "*")
   ym=mean(Y)
   y1=Y-ym
   if(res.sd == TRUE){
     sdy=sqrt(sum(y1^2)/(n-1))
+    if(sdy <= 0){
+      cat("Y has zero variance after centering.\n")
+      return(NULL)
+    }
     yy=y1/sdy
   }else{
     sdy = 1
@@ -83,7 +102,10 @@ slim <- function(X,
     d = d+1
   }
   
-  if(!is.null(lambda)) nlambda = length(lambda)
+  if(!is.null(lambda)) {
+    lambda = as.double(lambda)
+    nlambda = length(lambda)
+  }
   if(is.null(lambda)){
     if(is.null(nlambda))
       nlambda = 5
@@ -140,9 +162,17 @@ slim <- function(X,
       lambda.max = 1
       lambda.min.value = 0.4
     }
-    lambda = exp(seq(log(lambda.max), log(lambda.min.value), length = nlambda))
+    lambda = exp(seq(log(lambda.max), log(lambda.min.value), length.out = nlambda))
     rm(lambda.max,lambda.min.value,lambda.min.ratio)
-    gc()
+  }
+  nlambda = length(lambda)
+  if(nlambda == 0){
+    cat("At least one lambda value is required.\n")
+    return(NULL)
+  }
+  if(any(!is.finite(lambda)) || any(lambda <= 0)){
+    cat("lambda must contain positive finite values.\n")
+    return(NULL)
   }
   if(is.null(rho))
     rho = 1
@@ -168,38 +198,38 @@ slim <- function(X,
   
   df=rep(0,nlambda)
   if(intercept){
-    for(i in 1:nlambda)
+    for(i in seq_len(nlambda))
       df[i] = sum(out$beta[[i]][2:d]!=0)
   }else{
-    for(i in 1:nlambda)
+    for(i in seq_len(nlambda))
       df[i] = sum(out$beta[[i]]!=0)
   }
   
   est = list()
-  intcpt0=matrix(0,nrow=1,ncol=nlambda)
-  intcpt=matrix(0,nrow=1,ncol=nlambda)
+  intcpt0 = numeric(nlambda)
+  intcpt = numeric(nlambda)
   if(intercept){
     beta1=matrix(0,nrow=d-1,ncol=nlambda)
-    for(k in 1:nlambda){
+    for(k in seq_len(nlambda)){
       tmp.beta = out$beta[[k]][2:d]
       beta1[,k]=sdxinv*tmp.beta*sdy
-      intcpt[k] = ym-as.numeric(xm[1,]%*%beta1[,k])+out$beta[[k]][1]*sdy
+      intcpt[k] = ym-as.numeric(x.mean%*%beta1[,k])+out$beta[[k]][1]*sdy
       intcpt0[k] = intcpt[k]
     }
   }else{
     beta1=matrix(0,nrow=d,ncol=nlambda)
-    for(k in 1:nlambda){
+    for(k in seq_len(nlambda)){
       tmp.beta = out$beta[[k]]
       intcpt0[k] = 0
       beta1[,k] = sdxinv*tmp.beta*sdy
-      intcpt[k] = ym-as.numeric(xm[1,]%*%beta1[,k])
+      intcpt[k] = ym-as.numeric(x.mean%*%beta1[,k])
     }
   }
   
   est$beta0 = out$beta
   est$beta = beta1
-  est$intercept = intcpt
-  est$intercept0 = intcpt0
+  est$intercept = matrix(intcpt, nrow=1)
+  est$intercept0 = matrix(intcpt0, nrow=1)
   est$Y = Y
   est$X = X
   est$lambda = lambda
@@ -233,9 +263,7 @@ print.slim <- function(x, ...)
     }
   }
   cat("Degree of freedom:",min(x$df),"----->",max(x$df),"\n")
-  if(units.difftime(x$runtime)=="secs") unit="secs"
-  if(units.difftime(x$runtime)=="mins") unit="mins"
-  if(units.difftime(x$runtime)=="hours") unit="hours"
+  unit = as.character(units(x$runtime))
   cat("Runtime:",x$runtime,unit,"\n")
 }
 
@@ -251,23 +279,23 @@ coef.slim <- function(object, lambda.idx = c(1:3), beta.idx = c(1:3), ...)
   beta.n = length(beta.idx)
   cat("\n Values of estimated coefficients: \n")
   cat(" index     ")
-  for(i in 1:lambda.n){
+  for(i in seq_len(lambda.n)){
     cat("",formatC(lambda.idx[i],digits=5,width=10),"")
   }
   cat("\n")
   cat(" lambda    ")
-  for(i in 1:lambda.n){
+  for(i in seq_len(lambda.n)){
     cat("",formatC(object$lambda[lambda.idx[i]],digits=4,width=10),"")
   }
   cat("\n")
   cat(" intercept ")
-  for(i in 1:lambda.n){
+  for(i in seq_len(lambda.n)){
     cat("",formatC(object$intercept[lambda.idx[i]],digits=4,width=10),"")
   }
   cat("\n")
-  for(i in 1:beta.n){
+  for(i in seq_len(beta.n)){
     cat(" beta",formatC(beta.idx[i],digits=5,width=-5))
-    for(j in 1:lambda.n){
+    for(j in seq_len(lambda.n)){
       cat("",formatC(object$beta[beta.idx[i],lambda.idx[j]],digits=4,width=10),"")
     }
     cat("\n")
@@ -275,29 +303,34 @@ coef.slim <- function(object, lambda.idx = c(1:3), beta.idx = c(1:3), ...)
 }
 predict.slim <- function(object, newdata, lambda.idx = c(1:3), Y.pred.idx = c(1:5), ...)
 {
+  newdata = as.matrix(newdata)
+  if(ncol(newdata) != nrow(object$beta)){
+    cat("newdata has incompatible column size.\n")
+    return(NULL)
+  }
   pred.n = nrow(newdata)
   lambda.n = length(lambda.idx)
   Y.pred.n = length(Y.pred.idx)
-  intcpt = matrix(rep(object$intercept[,lambda.idx],pred.n),nrow=pred.n,
-                  ncol=lambda.n,byrow=T)
+  intcpt = matrix(object$intercept[,lambda.idx], nrow=pred.n,
+                  ncol=lambda.n,byrow=TRUE)
   Y.pred = newdata%*%object$beta[,lambda.idx] + intcpt
   cat("\n Values of predicted responses: \n")
   cat("   index   ")
-  for(i in 1:lambda.n){
+  for(i in seq_len(lambda.n)){
     cat("",formatC(lambda.idx[i],digits=5,width=10),"")
   }
   cat("\n")
   cat("   lambda  ")
-  for(i in 1:lambda.n){
+  for(i in seq_len(lambda.n)){
     cat("",formatC(object$lambda[lambda.idx[i]],digits=4,width=10),"")
   }
   cat("\n")
-  for(i in 1:Y.pred.n){
+  for(i in seq_len(Y.pred.n)){
     cat("    Y",formatC(Y.pred.idx[i],digits=5,width=-5))
-    for(j in 1:lambda.n){
+    for(j in seq_len(lambda.n)){
       cat("",formatC(Y.pred[Y.pred.idx[i],j],digits=4,width=10),"")
     }
     cat("\n")
   }
-  return(list(Y.pred))
+  return(list(Y.pred = Y.pred))
 }

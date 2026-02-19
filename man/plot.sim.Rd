@@ -20,7 +20,7 @@ Visualize the covariance matrix, the empirical covariance matrix, the adjacency 
 
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 \seealso{
 \code{\link{sugm.generator}}, \code{\link{sugm}} and \code{\link{flare-package}}

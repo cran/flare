@@ -38,7 +38,7 @@ slim.sqrt.ladm.scr <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite,
       num.scr2 = ceiling(d/log(d))
     }
   }
-  order0 = order(XY,decreasing = TRUE)
+  order0 = order(abs(XY),decreasing = TRUE)
   idx.scr = order0; num.scr = length(idx.scr)
   idx.scr1 = order0[1:num.scr1]
   idx.scr2 = order0[1:num.scr2]
@@ -54,7 +54,7 @@ slim.sqrt.ladm.scr <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.ite,
          as.integer(nlambda), as.integer(max.ite), as.double(prec), 
          as.integer(intcep),PACKAGE="flare")
   beta.list = vector("list", nlambda)
-  for(i in 1:nlambda){
+  for(i in seq_len(nlambda)){
     beta.i = unlist(str[4])[((i-1)*d+1):(i*d)]
     beta.list[[i]] = beta.i
   }

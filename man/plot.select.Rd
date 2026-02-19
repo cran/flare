@@ -20,7 +20,7 @@ System reserved (No specific usage)
 
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 \seealso{
 \code{\link{sugm}} and \code{\link{sugm.select}}

@@ -28,8 +28,21 @@ sugm <- function(data,
     cat("\"method\" must be either \"clime\" or \"tiger\" \n")
     return(NULL)
   }
+  if(sym!="or" && sym!="and"){
+    cat("\"sym\" must be either \"or\" or \"and\" \n")
+    return(NULL)
+  }
+  if(is.null(data)){
+    cat("No data input.\n")
+    return(NULL)
+  }
+  data = as.matrix(data)
   n = nrow(data)
   d = ncol(data)
+  if(n==0 || d==0){
+    cat("No data input.\n")
+    return(NULL)
+  }
   if(method == "tiger" && d<3){
     cat("d>=3 is required for \"tiger\" \n")
     cat("More on help(sugm) \n")
@@ -48,7 +61,7 @@ sugm <- function(data,
     if(verbose) {
       cat("The input is identified as the covriance matrix.\n")
     }
-    if(sum(is.na(data))>0){
+    if(anyNA(data)){
       cat("The input has missing values for covariance/correlation input.\n")
       return(NULL)
     }
@@ -70,11 +83,11 @@ sugm <- function(data,
   if(!est$cov.input)
   {
     X0=data
-    if(method=="tiger" && sum(is.na(X0))>0){
+    if(method=="tiger" && anyNA(X0)){
       cat("The input for \"tiger\" has missing values.\n")
       return(NULL)
     }
-    X1 = X0 - matrix(rep(colMeans(X0),n), nrow=n, byrow=TRUE)
+    X1 = sweep(X0, 2, colMeans(X0), FUN = "-")
     S0 = crossprod(X1)/(n-1)
     diag.cov=diag(S0)
     diag.cov.invsq = diag(1/sqrt(diag.cov))
@@ -94,7 +107,10 @@ sugm <- function(data,
     }
   }
   
-  if(!is.null(lambda)) nlambda = length(lambda)
+  if(!is.null(lambda)) {
+    lambda = as.double(lambda)
+    nlambda = length(lambda)
+  }
   if(is.null(lambda))
   {
     if(method == "tiger") {
@@ -104,24 +120,30 @@ sugm <- function(data,
       if(is.null(lambda.min.ratio))
         lambda.min.ratio = 0.4
       lambda.max= pi*sqrt(log(d)/n)
-      lambda = seq(lambda.max,lambda.min.ratio*lambda.max,length=nlambda)
+      lambda = seq(lambda.max,lambda.min.ratio*lambda.max,length.out=nlambda)
     }
     else {
       if(is.null(nlambda))
         nlambda = 5
       if(is.null(lambda.min.ratio))
         lambda.min.ratio = 0.4
-      lambda.max.tmp1 = min(max(S-diag(diag(S))),-min(S-diag(diag(S))))
-      lambda.max.tmp2 = max(max(S-diag(diag(S))),-min(S-diag(diag(S))))
-      if(lambda.max.tmp1==0)
-        lambda.max = lambda.max.tmp2
-      else
-        lambda.max = lambda.max.tmp1
+      S.offdiag = S-diag(diag(S))
+      lambda.max = max(abs(S.offdiag))
+      if(lambda.max <= 0){
+        lambda.max = 1
+      }
       lambda.min = lambda.min.ratio*lambda.max
-      lambda = exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
-      rm(lambda.max,lambda.min,lambda.min.ratio)
-      gc()
+      lambda = exp(seq(log(lambda.max), log(lambda.min), length.out = nlambda))
     }
+  }
+  nlambda = length(lambda)
+  if(nlambda == 0){
+    cat("At least one lambda value is required.\n")
+    return(NULL)
+  }
+  if(any(!is.finite(lambda)) || any(lambda <= 0)){
+    cat("lambda must contain positive finite values.\n")
+    return(NULL)
   }
   
   est$lambda = lambda
@@ -141,22 +163,20 @@ sugm <- function(data,
       }
     }
     S = S + diag(d)*perturb
-    if(method == "clime"){
-      if(is.null(shrink)) shrink = 0#1.5
-      if(is.null(max.ite)) max.ite=1e4
-      re.sugm = sugm.clime.ladm.scr(S, lambda, nlambda, n, d, maxdf, rho, shrink, prec, max.ite, verbose)
-      
-      if(standardize){
-        for(i in 1:nlambda){
-          re.sugm$icov1[[i]] = diag.cov.invsq%*%re.sugm$icov1[[i]]%*%diag.cov.invsq
-          icov.i = re.sugm$icov1[[i]]
-          re.sugm$icov[[i]] = icov.i*(abs(icov.i)<=abs(t(icov.i)))+t(icov.i)*(abs(t(icov.i))<abs(icov.i))
-        }
-      }else{
-        for(i in 1:nlambda){
-          icov.i = re.sugm$icov1[[i]]
-          re.sugm$icov[[i]] = icov.i*(abs(icov.i)<=abs(t(icov.i)))+t(icov.i)*(abs(t(icov.i))<abs(icov.i))
-        }
+    if(is.null(shrink)) shrink = 0#1.5
+    if(is.null(max.ite)) max.ite=1e4
+    re.sugm = sugm.clime.ladm.scr(S, lambda, nlambda, n, d, maxdf, rho, shrink, prec, max.ite, verbose)
+    
+    if(standardize){
+      for(i in seq_len(nlambda)){
+        re.sugm$icov1[[i]] = diag.cov.invsq%*%re.sugm$icov1[[i]]%*%diag.cov.invsq
+        icov.i = re.sugm$icov1[[i]]
+        re.sugm$icov[[i]] = icov.i*(abs(icov.i)<=abs(t(icov.i)))+t(icov.i)*(abs(t(icov.i))<abs(icov.i))
+      }
+    }else{
+      for(i in seq_len(nlambda)){
+        icov.i = re.sugm$icov1[[i]]
+        re.sugm$icov[[i]] = icov.i*(abs(icov.i)<=abs(t(icov.i)))+t(icov.i)*(abs(t(icov.i))<abs(icov.i))
       }
     }
   }
@@ -167,7 +187,7 @@ sugm <- function(data,
     
     re.sugm = sugm.tiger.ladm.scr(data, n, d, maxdf, rho, lambda, shrink, prec, max.ite, verbose)
     
-    for(i in 1:nlambda){
+    for(i in seq_len(nlambda)){
       re.sugm$icov1[[i]] = diag.cov.invsq%*%re.sugm$icov1[[i]]%*%diag.cov.invsq
       icov.i = re.sugm$icov1[[i]]
       re.sugm$icov[[i]] = icov.i*(abs(icov.i)<=abs(t(icov.i)))+t(icov.i)*(abs(t(icov.i))<abs(icov.i))
@@ -176,7 +196,7 @@ sugm <- function(data,
   est$ite = re.sugm$ite
   runt = Sys.time()-begt
   
-  for(j in 1:d) {
+  for(j in seq_len(d)) {
     if(re.sugm$col.cnz[j+1]>re.sugm$col.cnz[j])
     {
       idx.tmp = (re.sugm$col.cnz[j]+1):re.sugm$col.cnz[j+1]
@@ -185,14 +205,16 @@ sugm <- function(data,
       re.sugm$x[idx.tmp] = re.sugm$x[ord + re.sugm$col.cnz[j]]
     }
   }
-  G = new("dgCMatrix", Dim = as.integer(c(d*nlambda,d)), x = as.vector(re.sugm$x[1:re.sugm$col.cnz[d+1]]),
-          p = as.integer(re.sugm$col.cnz), i = as.integer(re.sugm$row.idx[1:re.sugm$col.cnz[d+1]]))
+  nnz = re.sugm$col.cnz[d+1]
+  nnz.idx = if(nnz > 0) seq_len(nnz) else integer(0)
+  G = new("dgCMatrix", Dim = as.integer(c(d*nlambda,d)), x = as.vector(re.sugm$x[nnz.idx]),
+          p = as.integer(re.sugm$col.cnz), i = as.integer(re.sugm$row.idx[nnz.idx]))
   
   est$beta = list()
   est$path = list()
   est$df = matrix(0,d,nlambda)  
   est$sparsity = rep(0,nlambda)  
-  for(i in 1:nlambda) {
+  for(i in seq_len(nlambda)) {
     est$beta[[i]] = G[((i-1)*d+1):(i*d),]
     est$path[[i]] = abs(est$beta[[i]])
     est$df[,i] = apply(sign(est$path[[i]]),2,sum)
@@ -238,13 +260,15 @@ plot.sugm = function(x, align = FALSE, ...){
   if(x$nlambda == 2)	par(mfrow = c(1, 3), pty = "s", omi=c(0.3,0.3,0.3,0.3), mai = c(0.3,0.3,0.3,0.3))
   if(x$nlambda >= 3)	par(mfrow = c(1, 4), pty = "s", omi=c(0.3,0.3,0.3,0.3), mai = c(0.3,0.3,0.3,0.3))
   
-  if(x$nlambda <= 3)	z.final = 1:x$nlambda
+  if(x$nlambda <= 3)	z.final = seq_len(x$nlambda)
   
   if(x$nlambda >=4){
     z.max = max(x$sparsity)
     z.min = min(x$sparsity)
     z = z.max - z.min
-    z.unique = unique(c(which(x$sparsity>=(z.min + 0.03*z))[1],which(x$sparsity>=(z.min + 0.07*z))[1],which(x$sparsity>=(z.min + 0.15*z))[1]))
+    z.unique = unique(stats::na.omit(c(which(x$sparsity>=(z.min + 0.03*z))[1],
+                                      which(x$sparsity>=(z.min + 0.07*z))[1],
+                                      which(x$sparsity>=(z.min + 0.15*z))[1])))
     
     
     if(length(z.unique) == 1){
@@ -262,6 +286,7 @@ plot.sugm = function(x, align = FALSE, ...){
     }
     
     if(length(z.unique) == 3) z.final = z.unique
+    if(length(z.unique) == 0) z.final = seq_len(min(x$nlambda, 3))
     
     rm(z.max,z.min,z,z.unique)
     gc()
@@ -272,9 +297,10 @@ plot.sugm = function(x, align = FALSE, ...){
   lines(x$lambda[z.final],x$sparsity[z.final],type = "p")
   
   if(align){
-    layout.grid = layout.fruchterman.reingold(graph.adjacency(as.matrix(x$path[[z.final[length(z.final)]]]), mode="undirected", diag=FALSE))
+    layout.grid = layout_with_fr(graph_from_adjacency_matrix(as.matrix(x$path[[z.final[length(z.final)]]]),
+                                                            mode="undirected", diag=FALSE))
     for(i in z.final){
-      g = graph.adjacency(as.matrix(x$path[[i]]), mode="undirected", diag=FALSE)
+      g = graph_from_adjacency_matrix(as.matrix(x$path[[i]]), mode="undirected", diag=FALSE)
       plot(g, layout=layout.grid, edge.color='gray50',vertex.color="red", vertex.size=3, vertex.label=NA, main = paste("lambda = ",as.character(round(x$lambda[i],3)),sep = ""))
       rm(g)
       gc()
@@ -283,8 +309,8 @@ plot.sugm = function(x, align = FALSE, ...){
   }
   if(!align){
     for(i in z.final){
-      g = graph.adjacency(as.matrix(x$path[[i]]), mode="undirected", diag=FALSE)
-      layout.grid = layout.fruchterman.reingold(g)
+      g = graph_from_adjacency_matrix(as.matrix(x$path[[i]]), mode="undirected", diag=FALSE)
+      layout.grid = layout_with_fr(g)
       plot(g, layout=layout.grid, edge.color='gray50',vertex.color="red", vertex.size=3, vertex.label=NA, main = paste("lambda = ",as.character(round(x$lambda[i],3)),sep = ""))
       rm(g,layout.grid)
       gc()

@@ -17,7 +17,6 @@ double func1(double lambda, double * v, double z, int n){
 }
 
 double mod_bisec1(double * v, double z, int n){
-    int cnt;
     double vmax, eps, lamb1, lamb2, lamb3, tmpfun1;
 
     if(l1norm(v,n)<=z) return 0;
@@ -31,13 +30,11 @@ double mod_bisec1(double * v, double z, int n){
         tmpfun1 = func1(lamb3, v, z, n);
         //printf("cnt=%d, lamb1=%f, lamb2=%f, lamb3=%f, func1=%f, func2=%f, func3=%f \n", cnt,lamb1,lamb2,lamb3,fun1(lamb1, v, z, n),fun1(lamb2, v, z, n),tmpfun1); 
         //sleep(10);
-        cnt = 0;
         while(fabs(tmpfun1)>eps){
             if(tmpfun1>0) lamb1 = lamb3;
             if(tmpfun1<0) lamb2 = lamb3;
             lamb3 = (lamb1+lamb2)/2;
             tmpfun1 = func1(lamb3, v, z, n);
-            cnt++;
             //if(cnt % 1 ==0) 
         }
         return lamb3;

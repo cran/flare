@@ -32,16 +32,14 @@ slim.dantzig.ladm.scr2 <- function(Y, X, lambda, nlambda, n, d, maxdf, rho, max.
   XX1 = XX[idx.scr,idx.scr]
   XXX = crossprod(XX1,XX1)
   gamma = max(colSums(abs(X)))
-  begt = Sys.time()
   str=.C("slim_dantzig_ladm_scr2", as.double(XY), as.double(XX), as.double(XXX), 
          as.double(beta), as.integer(n), as.integer(d), as.double(rho),
          as.integer(ite.int), as.integer(ite.int1), as.integer(num.scr1), 
          as.integer(idx.scr), as.integer(idx.scr1), as.double(gamma), as.double(lambda), 
          as.integer(nlambda), as.integer(max.ite), as.double(prec), 
          as.integer(intcep),PACKAGE="flare")
-  runt = Sys.time() - begt
   beta.list = vector("list", nlambda)
-  for(i in 1:nlambda){
+  for(i in seq_len(nlambda)){
     beta.i = unlist(str[4])[((i-1)*d+1):(i*d)]
     beta.list[[i]] = beta.i
   }

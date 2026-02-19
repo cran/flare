@@ -14,7 +14,7 @@ Plot sparsity level information and 3 typical sparse graphs from the graph path.
   An object with S3 class \code{"sugm"} 
   }
   \item{align}{
-  If \code{align = FALSE}, 3 plotted graphs are aligned
+  If \code{align = TRUE}, the three plotted graphs are aligned.
   }
   \item{\dots}{
   Arguments to be passed to methods.
@@ -23,7 +23,7 @@ Plot sparsity level information and 3 typical sparse graphs from the graph path.
 
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 \seealso{
 \code{\link{sugm}} and \code{\link{flare-package}}

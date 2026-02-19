@@ -2,11 +2,11 @@
 \alias{sugm.plot}
 
 \title{
-Graph visualization for an object with S3 class \code{"sugm"}
+Graph Visualization from an Adjacency Matrix
 }
 
 \description{
-Implements the graph visualization using adjacency matrix. It can automatic organize 2D embedding layout.
+Implements graph visualization using an adjacency matrix and automatically organizes a 2D embedding layout.
 }
 
 \usage{
@@ -38,7 +38,7 @@ The user can change \code{cur.num} to plot several figures and select the best o
 
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 
 \seealso{

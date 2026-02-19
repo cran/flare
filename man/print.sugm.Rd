@@ -5,7 +5,7 @@
 Print Function for an object with S3 class \code{"sugm"}
 }
 \description{
-Print a summary of the information about an object with S3 class \code{"slim"}.
+Print a summary of information about an object with S3 class \code{"sugm"}.
 }
 \usage{
 \method{print}{sugm}(x, ...)
@@ -29,7 +29,7 @@ This call simply outlines the options used for computing a sugm object.
 
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 %\note{
 %}

@@ -5,7 +5,7 @@
 Prediction for an object with S3 class \code{"slim"}
 }
 \description{
-Predicting responses of the given design data.
+Predict responses for new design data.
 }
 \usage{
 \method{predict}{slim}(object, newdata, lambda.idx = c(1:3), Y.pred.idx = c(1:5), \dots)
@@ -16,10 +16,10 @@ Predicting responses of the given design data.
   An object with S3 class \code{"slim"} 
   }
   \item{newdata}{
-  An optional data frame in which to look for variables with which to predict. If omitted, the traning data of the are used.
+  A matrix or data frame containing predictors used for prediction.
   }
   \item{lambda.idx}{
-  The indices of the regularizaiton parameters in the solution path to be displayed. The default values are \code{c(1:3)}.
+  The indices of regularization parameters in the solution path to display. The default values are \code{c(1:3)}.
   }
   \item{Y.pred.idx}{
   The indices of the predicted response vectors in the solution path to be displayed. The default values are \code{c(1:5)}.
@@ -38,12 +38,12 @@ Predicting responses of the given design data.
 %%  ~Describe the value returned
 %%  If it is a LIST, use
   \item{Y.pred}{
-  The predicted response vectors based on the estimated models.
+  A matrix of predicted response values based on the selected models.
   }
 }
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 
 \examples{

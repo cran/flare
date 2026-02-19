@@ -49,10 +49,10 @@ If \code{verbose = FALSE}, tracing information printing is disabled. The default
 
 \details{
 Given the adjacency matrix \code{theta}, the graph patterns are generated as below:\cr\cr
-(I) \code{"random"}: Each pair of off-diagonal elements are randomly set \code{theta[i,j]=theta[j,i]=1} for \code{i!=j} with probability \code{prob}, and \code{0} other wise. It results in about \code{d*(d-1)*prob/2} edges in the graph.\cr\cr
+(I) \code{"random"}: Each pair of off-diagonal elements is randomly set to \code{theta[i,j]=theta[j,i]=1} for \code{i!=j} with probability \code{prob}, and \code{0} otherwise. It results in about \code{d*(d-1)*prob/2} edges in the graph.\cr\cr
 (II)\code{"hub"}:The row/columns are evenly partitioned into \code{g} disjoint groups. Each group is associated with a "center" row \code{i} in that group. Each pair of off-diagonal elements are set \code{theta[i,j]=theta[j,i]=1} for \code{i!=j} if \code{j} also belongs to the same group as \code{i} and \code{0} otherwise. It results in \code{d - g} edges in the graph.\cr\cr
-(III)\code{"cluster"}:The row/columns are evenly partitioned into \code{g} disjoint groups. Each pair of off-diagonal elements are set \code{theta[i,j]=theta[j,i]=1} for \code{i!=j} with the probability \code{prob}if both \code{i} and \code{j} belong to the same group, and \code{0} other wise. It results in about \code{g*(d/g)*(d/g-1)*prob/2} edges in the graph.\cr\cr
-(IV)\code{"band"}: The off-diagonal elements are set to be \code{theta[i,j]=1} if \code{1<=|i-j|<=g} and \code{0} other wise. It results in \code{(2d-1-g)*g/2} edges in the graph.\cr\cr
+(III)\code{"cluster"}: The rows/columns are evenly partitioned into \code{g} disjoint groups. Each pair of off-diagonal elements is set to \code{theta[i,j]=theta[j,i]=1} for \code{i!=j} with probability \code{prob} if both \code{i} and \code{j} belong to the same group, and \code{0} otherwise. It results in about \code{g*(d/g)*(d/g-1)*prob/2} edges in the graph.\cr\cr
+(IV)\code{"band"}: The off-diagonal elements are set to \code{theta[i,j]=1} if \code{1<=|i-j|<=g} and \code{0} otherwise. It results in \code{(2d-1-g)*g/2} edges in the graph.\cr\cr
 (V) \code{"scale-free"}: The graph is generated using B-A algorithm. The initial graph has two connected nodes and each new node is connected to only one node in the existing graph with the probability proportional to the degree of the each node in the existing graph. It results in \code{d} edges in the graph.\cr\cr
 
 The adjacency matrix \code{theta} has all diagonal elements equal to \code{0}. To obtain a positive definite covariance matrix, the smallest eigenvalue of \code{theta*v} (denoted by \code{e}) is computed. Then we set the covariance matrix equal to \code{cov2cor(solve(theta*v+(|e|+0.1+u)*I))} to generate multivariate normal data.
@@ -79,7 +79,7 @@ The adjacency matrix of true graph structure (in sparse matrix representation) f
 
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 
 %\references{

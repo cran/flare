@@ -4,7 +4,7 @@
 Plot Function for "slim"
 }
 \description{
-Visualize the solution path of regression estimate corresponding to regularization paramters.
+Visualize the solution path of regression estimates corresponding to regularization parameters.
 }
 \usage{
 \method{plot}{slim}(x, ...)
@@ -20,7 +20,7 @@ Visualize the solution path of regression estimate corresponding to regularizati
 
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 
 \seealso{

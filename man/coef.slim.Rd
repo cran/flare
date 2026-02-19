@@ -14,10 +14,10 @@ Extract estimated regression coefficient vectors from the solution path.
   An object with S3 class \code{"slim"} 
   }
   \item{lambda.idx}{
-  The indices of the regularizaiton parameters in the solution path to be displayed. The default values are \code{c(1:3)}.
+  The indices of the regularization parameters in the solution path to display. The default values are \code{c(1:3)}.
   }
   \item{beta.idx}{
-  The indices of the estimate regression coefficient vectors in the solution path to be displayed. The default values are \code{c(1:3)}.
+  The indices of estimated regression coefficient vectors in the solution path to display. The default values are \code{c(1:3)}.
   }
   \item{\dots}{
   Arguments to be passed to methods.
@@ -26,7 +26,7 @@ Extract estimated regression coefficient vectors from the solution path.
 
 \author{
 Xingguo Li, Tuo Zhao, Lie Wang, Xiaoming Yuan and Han Liu \cr
-Maintainer: Xingguo Li <xingguo.leo@gmail.com>
+Maintainer: Tuo Zhao <tourzhao@gatech.edu>
 }
 
 \seealso{

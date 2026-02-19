@@ -8,7 +8,7 @@
 void sugm_clime_ladm_scr(double *X0, double *XX, double *beta, double *x0, int *d, double * gamma, double * lambda, int * nnlambda, double *rho0, int *col_cnz0, int * row_idx0, int *ite_int, int *ite_int1, int *ite_int2, int *num_scr_1, int *num_scr_2, int *idx_scr, int * idx_scr_1, int * idx_scr_2, int *max_ite, double *prec, int * idx0)
 {
     int j,k,m,dim,nlambda,ite1,ite2,ite,max_ite0,max_ite1,max_ite2,num_scr,num_scr1,num_scr2,num_scr1_tmp,num_scr2_tmp,flag,flag1,flag2,cnz,idx,intercept;
-    double T,T1,T2,rho,zero,eps,eps1,eps2,ilambda;
+    double T,T1,T2,rho,eps,eps1,eps2,ilambda;
     
     dim = *d;
     rho = *rho0;
@@ -32,7 +32,6 @@ void sugm_clime_ladm_scr(double *X0, double *XX, double *beta, double *x0, int *
     eps1 = *prec;
     eps2 = *prec;
     eps = eps2*10;
-    zero = 0;
     cnz = 0;
     intercept = 0;
 
